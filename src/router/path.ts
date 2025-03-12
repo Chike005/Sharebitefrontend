@@ -11,6 +11,8 @@ const paths = {
   signup: `${rootPaths.authRoot}sign-up`,
   notfound: `${rootPaths.errorRoot}/404`,
 
+  home: `${rootPaths.pageRoots}home`,
+
   dashboard: `${rootPaths.pageRoots}dashboard`,
   donations: `${rootPaths.pageRoots}donations`,
   donors: `${rootPaths.pageRoots}donors`,

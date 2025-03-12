@@ -8,6 +8,7 @@ const App = lazy(() => import('App'));
 const MainLayout = lazy(() => import('layouts/main-layout'));
 const AuthLayout = lazy(() => import('layouts/auth-layout'));
 
+const Home = lazy(() => import('pages/Home'));
 const Dashboard = lazy(() => import('pages/admin/dashboard'));
 const Donations = lazy(() => import('pages/admin/donations'));
 const Donors = lazy(() => import('pages/admin/donors'));
@@ -27,27 +28,33 @@ const SignupPage = lazy(() => import('pages/authentication/signup'));
 const LoginPage = lazy(() => import('pages/authentication/login'));
 
 const Spinner = lazy(() => import('components/loading/Spinner'));
-const LoadingProgress = lazy(
-  () => import('components/loading/LoadingProgress'),
-);
+const LoadingProgress = lazy(() => import('components/loading/LoadingProgress'));
 
 const NotFoundPage = lazy(() => import('pages/not-found'));
 /* -------------------------------------------------------------------------- */
 
 export const routes = [
   {
-    elements: (
+    element: (
       <Suspense fallback={<Spinner />}>
         <App />
       </Suspense>
     ),
     children: [
       {
-        path: paths.default,
-        element: <Navigate to={paths.login} replace />,
+        path: paths.default, // Redirect "/" to "/home"
+        element: <Navigate to={paths.home} replace />,
       },
       {
-        path: rootPaths.authRoot,
+        path: paths.home, // ✅ Home page (PUBLIC)
+        element: (
+          <Suspense fallback={<LoadingProgress />}>
+            <Home />
+          </Suspense>
+        ),
+      },
+      {
+        path: rootPaths.authRoot, // ✅ Authentication routes
         element: <AuthLayout />,
         children: [
           {
@@ -61,21 +68,13 @@ export const routes = [
         ],
       },
       {
-        paths: rootPaths.pageRoots,
+        path: rootPaths.pageRoots, // ✅ Protected routes for authenticated users
         element: (
           <ProtectedRoute>
             <MainLayout />
           </ProtectedRoute>
         ),
         children: [
-          {
-            path: paths.profile,
-            element: (
-              <Suspense fallback={<LoadingProgress />}>
-                <Profile />
-              </Suspense>
-            ),
-          },
           {
             path: paths.dashboard,
             element: (
@@ -156,6 +155,14 @@ export const routes = [
               </Suspense>
             ),
           },
+          {
+            path: paths.profile,
+            element: (
+              <Suspense fallback={<LoadingProgress />}>
+                <Profile />
+              </Suspense>
+            ),
+          },
         ],
       },
       {
@@ -168,7 +175,7 @@ export const routes = [
         ],
       },
       {
-        path: '*',
+        path: '*', // Redirect unknown paths to NotFoundPage
         element: <Navigate to={paths.notfound} replace />,
       },
     ],
