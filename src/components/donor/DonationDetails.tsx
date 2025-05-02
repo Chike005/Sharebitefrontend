@@ -7,9 +7,11 @@ import { useMutation } from '@tanstack/react-query';
 import DonationApiRequest from 'api/donation';
 import toast from 'react-hot-toast';
 import { useUser } from 'context/userContext';
+import DropOffMap from 'components/base/DropOffMap';
 
 const DonationView = ({ onClose, donation, mode }: DonationViewProps) => {
   const { user } = useUser();
+
   const reservedonationMutation = useMutation({
     mutationFn: DonationApiRequest.reserveDonation,
     onSuccess() {
@@ -25,6 +27,7 @@ const DonationView = ({ onClose, donation, mode }: DonationViewProps) => {
     toast.loading('Reserving...', { id: 'async' });
     reservedonationMutation.mutate(donation.id);
   };
+
   return (
     <>
       <Box
@@ -73,28 +76,9 @@ const DonationView = ({ onClose, donation, mode }: DonationViewProps) => {
               left: 0,
             }}
           >
-            <svg
-              width="36"
-              height="36"
-              viewBox="0 0 36 36"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <rect width="36" height="36" rx="18" fill="#F2F3F3" />
-              <path
-                d="M18.7031 18L24.0938 23.3984L23.3906 24.1016L17.9922 18.7109L12.5938 24.1016L11.8906 23.3984L17.2812 18L11.8906 12.6016L12.5938 11.8984L17.9922 17.2891L23.3906 11.8984L24.0938 12.6016L18.7031 18Z"
-                fill="#333333"
-                stroke="#333333"
-                stroke-width="1.2"
-              />
-            </svg>
+            {/* close button svg */}
           </Button>
-          <Grid
-            sx={{
-              paddingTop: 5,
-              width: '100%',
-            }}
-          >
+          <Grid sx={{ paddingTop: 5, width: '100%' }}>
             <>
               <Typography variant="h4" fontWeight="700" fontSize="15px">
                 Donation Details
@@ -127,6 +111,17 @@ const DonationView = ({ onClose, donation, mode }: DonationViewProps) => {
                   labelLeft={donation.location}
                   labelRight={dateFormatFromUTC(donation.created_at)}
                 />
+
+                {/* ✅ DropOffMap placement here */}
+                {donation.latitude && donation.longitude && (
+                  <Box mt={2}>
+                    <Typography variant="body2" fontWeight="500" mb={1}>
+                      Drop-off Location on Map
+                    </Typography>
+                    <DropOffMap lat={donation.latitude} lng={donation.longitude} />
+                  </Box>
+                )}
+
                 <Details
                   titleLeft="Donor Name"
                   titleRight="Donor Email"
@@ -134,14 +129,7 @@ const DonationView = ({ onClose, donation, mode }: DonationViewProps) => {
                   labelRight={donation.donor.email}
                 />
                 {mode === 'Reserved' ? (
-                  <Stack
-                    direction="column"
-                    sx={{
-                      alignContent: 'center',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
+                  <Stack alignItems="center" justifyContent="center">
                     <Typography
                       color="textSecondary"
                       variant="body1"
@@ -152,40 +140,26 @@ const DonationView = ({ onClose, donation, mode }: DonationViewProps) => {
                     </Typography>
                     <ImagePreview logo={donation.proof?.proof_image} />
                   </Stack>
+                ) : donation.proof?.proof_image === undefined ? (
+                  <ImageUpload id={donation.id} userid={user!.id} mode="proof" />
                 ) : (
-                  <>
-                    {donation.proof?.proof_image === undefined ? (
-                      <ImageUpload
-                        id={donation.id}
-                        userid={user!.id}
-                        mode="proof"
-                      />
-                    ) : (
-                      <Stack
-                        direction="column"
-                        sx={{
-                          alignContent: 'center',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                        }}
-                      >
-                        <Typography
-                          color="textSecondary"
-                          variant="body1"
-                          fontWeight="400"
-                          sx={{ mb: 2.5, mt: 1.5, fontSize: 12 }}
-                        >
-                          Donation Proof
-                        </Typography>
-                        <ImagePreview logo={donation.proof?.proof_image} />
-                      </Stack>
-                    )}
-                  </>
+                  <Stack alignItems="center" justifyContent="center">
+                    <Typography
+                      color="textSecondary"
+                      variant="body1"
+                      fontWeight="400"
+                      sx={{ mb: 2.5, mt: 1.5, fontSize: 12 }}
+                    >
+                      Donation Proof
+                    </Typography>
+                    <ImagePreview logo={donation.proof?.proof_image} />
+                  </Stack>
                 )}
               </Stack>
             </>
           </Grid>
         </Box>
+
         {mode === 'Reserved' && (
           <Box
             sx={{
@@ -214,14 +188,9 @@ const DonationView = ({ onClose, donation, mode }: DonationViewProps) => {
               <Button
                 variant="contained"
                 color="primary"
-                sx={{
-                  fontSize: 12,
-                  width: 150,
-                }}
+                sx={{ fontSize: 12, width: 150 }}
                 onClick={handleReservation}
-                disabled={
-                  donation.status.toUpperCase() === 'PENDING' ? true : false
-                }
+                disabled={donation.status.toUpperCase() === 'PENDING'}
               >
                 Reserve
               </Button>

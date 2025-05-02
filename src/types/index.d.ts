@@ -39,6 +39,11 @@ declare global {
     description: string;
     location: string;
     donor?: number;
+    quantity: string;
+    expiry_date: string;
+    latitude?: number;
+    longitude?: number;
+    donor_id?: number;
   }
 
   interface User {
@@ -65,6 +70,9 @@ declare global {
     reserved_by: User | null;
     proof?: Proof;
     receipt?: Reciept;
+    latitude?: number;
+    longitude?: number;
+    quantity: string;
   }
 
   interface ReDonation {
@@ -79,6 +87,9 @@ declare global {
     reserved_by: User | null;
     proof?: Proof;
     receipt?: Reciept2;
+    latitude?: number;
+    longitude?: number;
+    quantity: string;
   }
 
   interface Proof {
@@ -109,6 +120,9 @@ declare global {
     location: string;
     added_by: User;
     created_at: string;
+    latitude: number;
+    longitude: number;
+    status: string;
   }
 
   // Props

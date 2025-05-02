@@ -1,38 +1,59 @@
-import {
-  Box,
-  Button,
-  FormControl,
-  FormHelperText,
-  Grid,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Stack,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Grid, Stack, TextField, Typography } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import DonationApiRequest from 'api/donation';
 import { useUser } from 'context/userContext';
 import { useFormValidation } from 'hooks/useFormValidation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import DonationSchemas from 'schema/donation';
+import DropOffMapSelector from 'components/base/DropOffMapSelector';
+import { string } from 'zod';
+
+interface MakeDonationProps {
+  onClose: () => void;
+}
 
 const MakeDonation = ({ onClose }: MakeDonationProps) => {
-  const [title, setTitle] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
-  const [selectedOption, setSelectedOption] = useState<string>('');
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [quantity, setQuantity] = useState('');
+  const [expiryDate, setExpiryDate] = useState('');
+  const [userLocation, setUserLocation] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
+
   const { user } = useUser();
-  const { errors, validate } = useFormValidation(DonationSchemas.makeDonation);
-  const handleSelectChange = (event: SelectChangeEvent) => {
-    setSelectedOption(event.target.value);
-  };
+
+  const { validate } = useFormValidation(
+    DonationSchemas.makeDonation.extend({
+      expiry_date: string(),
+    }),
+  );
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.error('Geolocation error:', error);
+          toast.error('Unable to access location. Please enable GPS.');
+        },
+      );
+    } else {
+      toast.error('Geolocation is not supported by this browser.');
+    }
+  }, []);
 
   const makeDonationMutation = useMutation({
-    mutationFn: DonationApiRequest.makeDonation,
+    mutationFn: (data: MakeDonation) => DonationApiRequest.makeDonation(data),
     onSuccess(data) {
-      toast.success('Donation sucessful', { id: 'asyntoast' });
+      toast.success('Donation successful', { id: 'asyntoast' });
       console.log(data);
       onClose();
     },
@@ -43,18 +64,29 @@ const MakeDonation = ({ onClose }: MakeDonationProps) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    const lat = userLocation?.lat ?? 0;
+    const lng = userLocation?.lng ?? 0;
+    const locationString = `${lat},${lng}`;
+
     if (
       validate({
-        title: title,
-        description: description,
-        location: selectedOption,
+        title,
+        description,
+        expiry_date: expiryDate,
+        location: locationString,
       })
     ) {
       toast.loading('Donating...', { id: 'asyntoast' });
+
       makeDonationMutation.mutate({
-        title: title,
-        description: description,
-        location: selectedOption,
+        title,
+        description,
+        quantity,
+        expiry_date: expiryDate,
+        location: locationString, // ✅ Always a string
+        latitude: lat,
+        longitude: lng,
         donor: user?.id,
       });
     }
@@ -92,142 +124,75 @@ const MakeDonation = ({ onClose }: MakeDonationProps) => {
           transition: 'all 0.9s ease-in-out',
         }}
       >
-        <Box
-          sx={{
-            position: 'relative',
-            flexGrow: 1,
-            overflow: 'auto',
-            p: 2,
-          }}
-        >
-          <Button
-            onClick={onClose}
-            sx={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-            }}
-          >
-            <svg
-              width="36"
-              height="36"
-              viewBox="0 0 36 36"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <rect width="36" height="36" rx="18" fill="#F2F3F3" />
-              <path
-                d="M18.7031 18L24.0938 23.3984L23.3906 24.1016L17.9922 18.7109L12.5938 24.1016L11.8906 23.3984L17.2812 18L11.8906 12.6016L12.5938 11.8984L17.9922 17.2891L23.3906 11.8984L24.0938 12.6016L18.7031 18Z"
-                fill="#333333"
-                stroke="#333333"
-                stroke-width="1.2"
-              />
-            </svg>
+        <Box sx={{ position: 'relative', flexGrow: 1, overflow: 'auto', p: 2 }}>
+          <Button onClick={onClose} sx={{ position: 'absolute', top: 0, left: 0 }}>
+            Close
           </Button>
-          <Grid
-            sx={{
-              paddingTop: 5,
-              width: '100%',
-            }}
-          >
-            <>
-              <Typography variant="h4" fontWeight="700" fontSize="15px">
-                Make Donations
-              </Typography>
-              <Typography
-                color="textSecondary"
-                variant="body1"
-                fontWeight="400"
-                sx={{ mb: 2.5, mt: 1.5, fontSize: 12 }}
-              >
-                Please enter details for the donations
-              </Typography>
+          <Grid sx={{ paddingTop: 5, width: '100%' }}>
+            <Typography variant="h4" fontWeight="700" fontSize="15px">
+              Make a Donation
+            </Typography>
+            <Typography
+              color="textSecondary"
+              variant="body1"
+              fontWeight="400"
+              sx={{ mb: 2.5, mt: 1.5, fontSize: 12 }}
+            >
+              Please enter details for the donation
+            </Typography>
 
-              <Stack spacing={3} position="relative">
-                <TextField
-                  name="title"
-                  label="Donation title *"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                />
-                {errors.title && (
-                  <Typography sx={{ color: 'red', fontSize: '10px' }}>
-                    {errors.title}
-                  </Typography>
-                )}
-                <TextField
-                  name="description"
-                  label="Description *"
-                  value={description}
-                  multiline
-                  onChange={(e) => setDescription(e.target.value)}
-                />
-                {errors.description && (
-                  <Typography sx={{ color: 'red', fontSize: '10px' }}>
-                    {errors.description}
-                  </Typography>
-                )}
-                <FormControl fullWidth>
-                  <Select
-                    labelId="demo-simple-select-helper-label"
-                    id="demo-simple-select-helper"
-                    value={selectedOption}
-                    onChange={handleSelectChange}
-                    label="Event to Send"
-                    MenuProps={{
-                      PaperProps: {
-                        sx: {
-                          zIndex: 44444,
-                          maxHeight: 300,
-                        },
-                      },
-                    }}
-                    style={{
-                      zIndex: 44444,
-                    }}
-                  >
-                    <MenuItem value="">
-                      <em>None</em>
-                    </MenuItem>
-                    <MenuItem value="New York, NY">Option 1</MenuItem>
-                    <MenuItem value="San Fransisco, CA">Option 2</MenuItem>
-                    <MenuItem value="Chicago, IL">Option 3</MenuItem>
-                  </Select>
-                  <FormHelperText
-                    sx={{
-                      ml: 0,
-                    }}
-                  >
-                    Select a drop off location
-                  </FormHelperText>
-                  {errors.location && (
-                    <Typography sx={{ color: 'red', fontSize: '10px' }}>
-                      {errors.location}
-                    </Typography>
-                  )}
-                </FormControl>
-              </Stack>
-            </>
+            <Stack spacing={3}>
+              <TextField
+                name="title"
+                label="Donation Title *"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+              <TextField
+                name="description"
+                label="Description *"
+                multiline
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+              <TextField
+                name="quantity"
+                label="Quantity *"
+                type="number"
+                value={quantity}
+                onChange={(e) => setQuantity(e.target.value)}
+              />
+              <TextField
+                name="expiry_date"
+                label="Expiry Date *"
+                type="date"
+                value={expiryDate}
+                onChange={(e) => setExpiryDate(e.target.value)}
+              />
+
+              <Typography fontSize={13} fontWeight={500}>
+                Select Drop-off Location on Map *
+              </Typography>
+              <DropOffMapSelector
+                onLocationSelect={(lat, lng) => {
+                  setUserLocation({ lat, lng });
+                }}
+              />
+
+              {userLocation && (
+                <Typography sx={{ fontSize: '12px', color: 'gray', mt: 1 }}>
+                  📍 Selected Location: {userLocation.lat.toFixed(5)}, {userLocation.lng.toFixed(5)}
+                </Typography>
+              )}
+            </Stack>
           </Grid>
         </Box>
-        <Box
-          sx={{
-            mt: 3,
-            mb: 0,
-            background: '#',
-            zIndex: 1112,
-            borderTop: '1px solid #c7ebfc',
-            p: 1,
-          }}
-        >
+        <Box sx={{ mt: 3, borderTop: '1px solid #c7ebfc', p: 1 }}>
           <Stack direction="row" spacing={2} justifyContent="flex-end">
             <Button
               variant="contained"
               color="primary"
-              sx={{
-                fontSize: 12,
-                width: 150,
-              }}
+              sx={{ fontSize: 12, width: 150 }}
               onClick={handleSubmit}
             >
               {makeDonationMutation.isPending ? 'Donating...' : 'Donate'}

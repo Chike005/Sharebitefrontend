@@ -1,26 +1,27 @@
 import { API_ENDPOINTS } from 'helpers/constant';
 import { axiosInstance, handleAxiosError } from './config';
 
+// ✅ Use global MakeDonation type
+type MakeDonation = globalThis.MakeDonation;
+
 class DonationApiRequest {
   static getAllDonations = async (status?: string) => {
     try {
       const response = await axiosInstance.get(
-        `/${API_ENDPOINTS.donation.donations()}`,
+        `/${API_ENDPOINTS.donation.donations()}`
       );
       const donations: Donation[] = response.data;
-      if (status) {
-        console.log(status);
-        const filteredDonations = donations.filter((donation) => {
-          const matchDonations =
-            status === 'All' ||
-            donation.status.toUpperCase() === status!.toUpperCase();
-          return matchDonations;
-        });
 
+      if (status) {
+        const filteredDonations = donations.filter(
+          (donation) =>
+            status === 'All' ||
+            donation.status.toUpperCase() === status.toUpperCase()
+        );
         return { donations: filteredDonations };
-      } else {
-        return { donations: donations };
       }
+
+      return { donations };
     } catch (error) {
       handleAxiosError(error);
     }
@@ -29,34 +30,32 @@ class DonationApiRequest {
   static getUserDonations = async (status: string) => {
     try {
       const response = await axiosInstance.get(
-        `/${API_ENDPOINTS.donation.userdonations()}`,
+        `/${API_ENDPOINTS.donation.userdonations()}`
       );
-
       const donations: Donation[] = response.data;
 
       if (status) {
-        console.log(status);
-        const filteredDonations = donations.filter((donation) => {
-          const matchDonations =
+        const filteredDonations = donations.filter(
+          (donation) =>
             status === 'All' ||
-            donation.status.toUpperCase() === status!.toUpperCase();
-          return matchDonations;
-        });
-
+            donation.status.toUpperCase() === status.toUpperCase()
+        );
         return { cdonations: filteredDonations };
-      } else {
-        return { cdonations: donations };
       }
+
+      return { cdonations: donations };
     } catch (error) {
       handleAxiosError(error);
     }
   };
 
-  static makeDonation = async (credentials: MakeDonation) => {
+  static makeDonation = async (
+    credentials: MakeDonation
+  ): Promise<any> => {
     try {
       const response = await axiosInstance.post(
         `/${API_ENDPOINTS.donation.donations()}`,
-        credentials,
+        credentials
       );
       return response.data;
     } catch (error) {
@@ -74,7 +73,7 @@ class DonationApiRequest {
     try {
       const response = await axiosInstance.put(
         `/${API_ENDPOINTS.donation.updatestatus(donation_id)}`,
-        { status: status },
+        { status }
       );
       return response.data;
     } catch (error) {
@@ -85,7 +84,7 @@ class DonationApiRequest {
   static reserveDonation = async (donation_id: number) => {
     try {
       const response = await axiosInstance.post(
-        `/${API_ENDPOINTS.donation.reserve(donation_id)}`,
+        `/${API_ENDPOINTS.donation.reserve(donation_id)}`
       );
       return response.data;
     } catch (error) {
@@ -96,7 +95,7 @@ class DonationApiRequest {
   static cancelDonation = async (donation_id: number) => {
     try {
       const response = await axiosInstance.post(
-        `/${API_ENDPOINTS.donation.cancelDonation(donation_id)}`,
+        `/${API_ENDPOINTS.donation.cancelDonation(donation_id)}`
       );
       return response.data;
     } catch (error) {
@@ -107,7 +106,7 @@ class DonationApiRequest {
   static getReciepts = async () => {
     try {
       const response = await axiosInstance.get(
-        `/${API_ENDPOINTS.donation.receipts()}`,
+        `/${API_ENDPOINTS.donation.receipts()}`
       );
       return { receipts: response.data };
     } catch (error) {
@@ -118,7 +117,7 @@ class DonationApiRequest {
   static getReservations = async () => {
     try {
       const response = await axiosInstance.get(
-        `/${API_ENDPOINTS.donation.reservations()}`,
+        `/${API_ENDPOINTS.donation.reservations()}`
       );
       return { reservations: response.data };
     } catch (error) {
