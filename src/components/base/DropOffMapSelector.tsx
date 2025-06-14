@@ -22,14 +22,17 @@ const DropOffMapSelector: React.FC<Props> = ({ onLocationSelect }) => {
     googleMapsApiKey: 'AIzaSyDAEVtSkMAzJ27Y6ea2rvJQVXTobTNsLik  ', // Replace this
   });
 
-  const onMapClick = useCallback((e: google.maps.MapMouseEvent) => {
-    if (e.latLng) {
-      const lat = e.latLng.lat();
-      const lng = e.latLng.lng();
-      setMarker({ lat, lng });
-      onLocationSelect(lat, lng);
-    }
-  }, [onLocationSelect]);
+  const onMapClick = useCallback(
+    (e: google.maps.MapMouseEvent) => {
+      if (e.latLng) {
+        const lat = e.latLng.lat();
+        const lng = e.latLng.lng();
+        setMarker({ lat, lng });
+        onLocationSelect(lat, lng);
+      }
+    },
+    [onLocationSelect],
+  );
 
   if (!isLoaded) return <p>Loading map...</p>;
 

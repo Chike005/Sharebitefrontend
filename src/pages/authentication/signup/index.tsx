@@ -1,3 +1,4 @@
+import React from 'react';
 import SignupForm from 'components/common/Signup';
 import { Card, Grid, Link, Typography } from '@mui/material';
 
