@@ -31,9 +31,16 @@ export const DonationProvider: React.FC<{ children: React.ReactNode }> = ({
     isLoading: donationLoading,
     error: donationError,
   } = useQuery({
-    queryKey: ['donations', statusFilter],
-    queryFn: () => DonationApiRequest.getAllDonations(statusFilter),
-    enabled: !!user,
+    queryKey: [
+      'donations',
+      user?.is_staff ? 'all' : 'available',
+      statusFilter,
+    ],
+    queryFn: () =>
+      user?.is_staff
+        ? DonationApiRequest.getAllDonations(statusFilter)
+        : DonationApiRequest.getAvailableDonations(statusFilter),
+    enabled: !!user && (user.is_staff || user.is_receiver),
   });
 
   const donations = donationData?.donations || [];
@@ -43,12 +50,12 @@ export const DonationProvider: React.FC<{ children: React.ReactNode }> = ({
     isLoading: locationLoading,
     error: locationError,
   } = useQuery({
-    queryKey: ['dropoffsites'],
-    queryFn: () => DroffSiteApiRequest.getAllSites(),
-    enabled: !!user && !user.is_donor && !user.is_receiver,
+    queryKey: ['collection-points'],
+    queryFn: () => DroffSiteApiRequest.getCollectionPoints(),
+    enabled: !!user?.is_staff,
   });
 
-  const locations = locationsData?.locations || [];
+  const locations = locationsData?.collectionPoints || [];
 
   const {
     data: usersData,
@@ -57,7 +64,7 @@ export const DonationProvider: React.FC<{ children: React.ReactNode }> = ({
   } = useQuery({
     queryKey: ['users'],
     queryFn: () => ApiRequests.getMembers(),
-    enabled: !!user && !user.is_donor && !user.is_receiver,
+    enabled: !!user?.is_staff,
   });
 
   const users = usersData?.users || [];

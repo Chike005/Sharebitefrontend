@@ -71,9 +71,16 @@ declare global {
     is_staff: boolean;
   }
 
+  interface DonationDonor {
+    id: number;
+    first_name: string;
+    last_name: string;
+    email?: string;
+  }
+
   interface Donation {
     id: number;
-    donor: User;
+    donor: DonationDonor;
     title: string;
     status: string;
     description: string;
@@ -81,7 +88,7 @@ declare global {
     is_reserved: boolean;
     is_delivered: boolean;
     created_at: string | Date;
-    reserved_by: User | null;
+    reserved_by?: DonationDonor | null;
     proof?: Proof;
     receipt?: Reciept;
     latitude?: number;
@@ -222,7 +229,7 @@ declare global {
 
   interface DonationContextType {
     donations: Donation[];
-    locations: DroffSite[];
+    locations: CollectionPoint[];
     users: User[];
     currentUserDonations: Donation[];
     reservations: Donation[];

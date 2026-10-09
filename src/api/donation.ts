@@ -29,6 +29,31 @@ class DonationApiRequest {
     }
   };
 
+  static getAvailableDonations = async (
+    status?: string,
+  ): Promise<{ donations: Donation[] }> => {
+    try {
+      const response = await axiosInstance.get(
+        `/${API_ENDPOINTS.donation.available()}`
+      );
+      const donations: Donation[] = response.data;
+
+      if (status) {
+        return {
+          donations: donations.filter(
+            (donation) =>
+              status === 'All' ||
+              donation.status.toUpperCase() === status.toUpperCase()
+          ),
+        };
+      }
+
+      return { donations };
+    } catch (error) {
+      return handleAxiosError(error);
+    }
+  };
+
   static getUserDonations = async (status: string) => {
     try {
       const response = await axiosInstance.get(

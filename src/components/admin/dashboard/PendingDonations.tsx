@@ -75,7 +75,7 @@ const PendingDonations = () => {
           donation.collection_status === collectionStatusFilter),
     );
 
-  const donorName = (donor: User) =>
+  const donorName = (donor: DonationDonor) =>
     [donor.first_name, donor.last_name].filter(Boolean).join(' ') ||
     donor.email ||
     `Donor #${donor.id}`;

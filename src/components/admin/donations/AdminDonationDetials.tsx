@@ -148,7 +148,7 @@ const AdminDonationDetails = ({ onClose, donation }: ReceiptProps) => {
                   titleLeft="Donor Name"
                   titleRight="Donor Email"
                   labelLeft={`${donation.donor.first_name} ${donation.donor.last_name}`}
-                  labelRight={donation.donor.email}
+                  labelRight={donation.donor.email || 'Unavailable'}
                 />
                 <Details
                   titleLeft="Pickup Location"
@@ -200,7 +200,7 @@ const AdminDonationDetails = ({ onClose, donation }: ReceiptProps) => {
                   }
                   labelRight={
                     donation.reserved_by != undefined
-                      ? donation.reserved_by!.email
+                      ? donation.reserved_by!.email || 'Unavailable'
                       : 'Not Reserved yet'
                   }
                 />

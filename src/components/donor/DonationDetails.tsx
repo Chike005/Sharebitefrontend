@@ -173,7 +173,7 @@ const DonationView = ({ onClose, donation, mode }: DonationViewProps) => {
                   titleLeft="Donor Name"
                   titleRight="Donor Email"
                   labelLeft={`${donation.donor.first_name} ${donation.donor.last_name}`}
-                  labelRight={donation.donor.email}
+                  labelRight={donation.donor.email || 'Provided after reservation'}
                 />
                 {mode === 'Reserved' ? (
                   <Stack alignItems="center" justifyContent="center">
