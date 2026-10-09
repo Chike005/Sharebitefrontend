@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  Box,
   Button,
   Grid,
   IconButton,
@@ -16,6 +17,7 @@ import { useMutation } from '@tanstack/react-query';
 import ApiRequests from 'api';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router';
+import { Link as RouterLink } from 'react-router-dom';
 import paths from 'router/path';
 import { useUser } from 'context/userContext';
 
@@ -65,7 +67,7 @@ const LoginForm = () => {
   };
 
   return (
-    <>
+    <Box component="form" onSubmit={handleSubmit}>
       <Grid container spacing={3} sx={{ mb: 2.5 }}>
         <Grid item xs={12}>
           <TextField
@@ -73,6 +75,8 @@ const LoginForm = () => {
             size={upSM ? 'medium' : 'small'}
             name="username"
             label="Username"
+            autoComplete="username"
+            inputProps={{ autoCapitalize: 'none', autoCorrect: 'off' }}
             value={formData.username}
             onChange={handleChange}
           />
@@ -88,6 +92,7 @@ const LoginForm = () => {
             size={upSM ? 'medium' : 'small'}
             name="password"
             label="Password"
+            autoComplete="current-password"
             value={formData.password}
             onChange={handleChange}
             type={showPassword ? 'text' : 'password'}
@@ -95,6 +100,8 @@ const LoginForm = () => {
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton
+                    type="button"
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
                     onClick={() => setShowPassword(!showPassword)}
                     edge="end"
                   >
@@ -117,8 +124,13 @@ const LoginForm = () => {
       </Grid>
       <Grid container justifyContent="flex-end" sx={{ my: 3 }}>
         <Grid item>
-          <Link href="/forget-password" variant="subtitle2" underline="hover">
-            Forgot password?
+          <Link
+            component={RouterLink}
+            to={paths.signup}
+            variant="subtitle2"
+            underline="hover"
+          >
+            Create an account
           </Link>
         </Grid>
       </Grid>
@@ -126,16 +138,16 @@ const LoginForm = () => {
         fullWidth
         size={upSM ? 'large' : 'medium'}
         type="submit"
+        disabled={loginMutation.isPending}
         variant="contained"
         sx={{
           fontSize: 12,
         }}
         color="primary"
-        onClick={handleSubmit}
       >
         {loginMutation.isPending ? 'Logging in...' : 'Login'}
       </Button>
-    </>
+    </Box>
   );
 };
 

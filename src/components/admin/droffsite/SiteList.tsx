@@ -46,8 +46,7 @@ const SiteListings = () => {
       minWidth: 300,
       hideable: false,
       renderCell: (params) => {
-        const fullname =
-          params.row.added_by.first_name + ' ' + params.row.added_by.last_name;
+        const fullname = params.row.added_by.first_name + ' ' + params.row.added_by.last_name;
         return (
           <Typography
             sx={{
@@ -117,22 +116,17 @@ const SiteListings = () => {
             py: 1,
             borderRadius: 2,
             alignItems: 'center',
-            bgcolor: '#0047CC',
+            bgcolor: '#1e493c',
           }}
           onClick={handleOpen}
         >
           <div style={{ alignSelf: 'center' }}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="15"
-              height="15"
-              viewBox="0 0 20 20"
-            >
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 20 20">
               <path
                 fill="#ffff"
                 d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"
-                fill-rule="evenodd"
-                clip-rule="evenodd"
+                fillRule="evenodd"
+                clipRule="evenodd"
               />
             </svg>
           </div>
@@ -160,8 +154,7 @@ const SiteListings = () => {
             border: 1,
             borderColor: 'neutral.light',
             bgcolor: { xs: 'transparent', sm: 'white' },
-            boxShadow: (theme) =>
-              `inset 0px -1px ${theme.palette.neutral.light}`, // color for row border
+            boxShadow: (theme) => `inset 0px -1px ${theme.palette.neutral.light}`, // color for row border
           },
         }}
       >
@@ -185,9 +178,7 @@ const SiteListings = () => {
               paginationModel={paginationModel}
               onPaginationModelChange={handlePaginationModelChange}
               slots={{
-                noRowsOverlay: () => (
-                  <NoData title={title} description={description} />
-                ),
+                noRowsOverlay: () => <NoData title={title} description={description} />,
                 pagination: () => null, // Hide the default pagination component
               }}
               loading={locationLoading}

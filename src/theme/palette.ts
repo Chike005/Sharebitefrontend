@@ -1,9 +1,5 @@
-import {
-  alpha,
-  PaletteColorOptions,
-  PaletteOptions,
-} from '@mui/material/styles';
-import { blue, green, grey, magneta, orange, red } from './colors';
+import { alpha, PaletteColorOptions, PaletteOptions } from '@mui/material/styles';
+import { green, grey, orange, red } from './colors';
 
 declare module '@mui/material/styles' {
   interface GradientOptions {
@@ -44,25 +40,25 @@ const palette: PaletteOptions = {
     focus: grey[300],
     hoverOpacity: 0.05,
   },
-  background: { paper: grey[50] },
+  background: { default: '#fbfaf6', paper: '#ffffff' },
   neutral: {
-    light: blue[100],
-    main: grey[600],
-    dark: grey[800],
+    light: '#eff4df',
+    main: '#64716c',
+    dark: '#315448',
     contrastText: '#ffffff',
   },
   primary: {
-    lighter: blue[200],
-    light: blue[300],
-    main: blue[500],
-    dark: blue[800],
-    darker: blue[900],
+    lighter: '#dff08c',
+    light: '#a9c45a',
+    main: '#1e493c',
+    dark: '#15372d',
+    darker: '#19352e',
     contrastText: '#ffffff',
   },
   secondary: {
-    lighter: magneta[100],
-    main: magneta[500],
-    contrastText: magneta[50],
+    lighter: '#eff4df',
+    main: '#88a137',
+    contrastText: '#19352e',
   },
   error: { main: red[500] },
   warning: {
@@ -81,18 +77,17 @@ const palette: PaletteOptions = {
 
   grey,
   text: {
-    primary: blue[900],
-    secondary: blue[200],
-    disabled: blue[50],
+    primary: '#19352e',
+    secondary: '#64716c',
+    disabled: '#a2a6b0',
   },
   divider: grey[100],
   gradients: {
-    blueGradient: `linear-gradient(to top right, ${blue[700]} 30%, ${blue[600]})`,
-    whiteGradient:
-      'linear-gradient(to bottom, rgba(255, 255, 255, .1) 0%, transparent)',
+    blueGradient: 'linear-gradient(to top right, #1e493c 30%, #315448)',
+    whiteGradient: 'linear-gradient(to bottom, rgba(255, 255, 255, .1) 0%, transparent)',
     whiteCardGradient:
       'linear-gradient(to bottom right, rgba(255, 255, 255, 0.15) 0%, transparent)',
-    bgGradient: 'linear-gradient(to right bottom, #f9fafb, #E6EFF5)',
+    bgGradient: 'linear-gradient(to right bottom, #fbfaf6, #eff4df)',
   },
 };
 

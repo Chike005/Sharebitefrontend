@@ -41,6 +41,7 @@ const MainLayout = () => {
             display: 'flex',
             flexGrow: 1,
             width: 1,
+            minHeight: '100vh',
             maxWidth: {
               xs: 1,
               md: `calc(100% - ${drawerWidth.md}px)`,
@@ -52,10 +53,11 @@ const MainLayout = () => {
           <MainNavbar onDrawerToggle={handleDrawerToggle} />
           <Stack
             sx={{
-              backgroundColor: { xs: 'common.white', md: 'background.paper' },
-              px: { xs: 3.15, md: 5, xl: 7 },
+              backgroundColor: 'background.default',
+              px: { xs: 2, sm: 3, md: 5, xl: 7 },
               flex: 1,
-              gap: 1,
+              gap: 2,
+              pb: 4,
             }}
           >
             <Outlet />

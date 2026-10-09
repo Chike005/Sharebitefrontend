@@ -1,5 +1,6 @@
 import { ChangeEvent, useState } from 'react';
 import {
+  Box,
   Button,
   FormControl,
   FormHelperText,
@@ -19,13 +20,17 @@ import IconifyIcon from 'components/base/IconifyIcon';
 import { useMutation } from '@tanstack/react-query';
 import ApiRequests from 'api';
 import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import paths from 'router/path';
 
 const SignupForm = () => {
   const { up } = useBreakpoints();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const upSM = up('sm');
+  const roleParam = searchParams.get('role');
+  const initialRole: 'donor' | 'receiver' | '' =
+    roleParam === 'donor' || roleParam === 'receiver' ? roleParam : '';
   const [formData, setFornData] = useState<SignupFormData>({
     username: '',
     first_name: '',
@@ -33,14 +38,13 @@ const SignupForm = () => {
     email: '',
     password: '',
     confirmpassword: '',
-    role: '',
-    is_donor: '',
-    is_receiver: '',
+    role: initialRole,
+    is_donor: initialRole === 'donor',
+    is_receiver: initialRole === 'receiver',
   });
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [showConfirmPassword, setShowConfirmPassword] =
-    useState<boolean>(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
 
   const { errors, validate } = useFormValidation(AuthSchemas.signupSchema);
   const handleChange = (
@@ -50,12 +54,11 @@ const SignupForm = () => {
 
     setFornData((prev: SignupFormData) => {
       if (name === 'role') {
-        // Assuming the select field name is 'role'
         return {
           ...prev,
           role: value,
           is_donor: value === 'donor',
-          is_receiver: value === 'reciever',
+          is_receiver: value === 'receiver',
         };
       }
       return {
@@ -67,9 +70,10 @@ const SignupForm = () => {
 
   const signupMutation = useMutation({
     mutationFn: ApiRequests.registerUser,
-    onSuccess(data) {
-      toast.success('Login successful!', { id: 'asyntoast' });
-      console.log(data);
+    onSuccess() {
+      toast.success('Account created. You can now sign in.', {
+        id: 'asyntoast',
+      });
       navigate(paths.login);
     },
     onError(error) {
@@ -97,7 +101,7 @@ const SignupForm = () => {
   };
 
   return (
-    <>
+    <Box component="form" onSubmit={handleSubmit}>
       <Grid container spacing={3} sx={{ mb: 2.5 }}>
         <Grid item xs={12}>
           <TextField
@@ -108,10 +112,8 @@ const SignupForm = () => {
             value={formData.first_name}
             onChange={handleChange}
           />
-          {errors.firstname && (
-            <Typography sx={{ color: 'red', fontSize: '10px' }}>
-              {errors.firstname}
-            </Typography>
+          {errors.first_name && (
+            <Typography sx={{ color: 'red', fontSize: '10px' }}>{errors.first_name}</Typography>
           )}
         </Grid>
         <Grid item xs={12}>
@@ -123,10 +125,8 @@ const SignupForm = () => {
             value={formData.last_name}
             onChange={handleChange}
           />
-          {errors.lastname && (
-            <Typography sx={{ color: 'red', fontSize: '10px' }}>
-              {errors.lastname}
-            </Typography>
+          {errors.last_name && (
+            <Typography sx={{ color: 'red', fontSize: '10px' }}>{errors.last_name}</Typography>
           )}
         </Grid>
         <Grid item xs={12}>
@@ -139,9 +139,7 @@ const SignupForm = () => {
             onChange={handleChange}
           />
           {errors.email && (
-            <Typography sx={{ color: 'red', fontSize: '10px' }}>
-              {errors.email}
-            </Typography>
+            <Typography sx={{ color: 'red', fontSize: '10px' }}>{errors.email}</Typography>
           )}
         </Grid>
         <Grid item xs={12}>
@@ -154,9 +152,7 @@ const SignupForm = () => {
             onChange={handleChange}
           />
           {errors.username && (
-            <Typography sx={{ color: 'red', fontSize: '10px' }}>
-              {errors.username}
-            </Typography>
+            <Typography sx={{ color: 'red', fontSize: '10px' }}>{errors.username}</Typography>
           )}
         </Grid>
         <Grid item xs={12}>
@@ -184,7 +180,7 @@ const SignupForm = () => {
                 <em>--</em>
               </MenuItem>
               <MenuItem value="donor">Donor</MenuItem>
-              <MenuItem value="reciever">Reciever</MenuItem>
+              <MenuItem value="receiver">Receiver</MenuItem>
             </Select>
             <FormHelperText
               sx={{
@@ -195,9 +191,7 @@ const SignupForm = () => {
             </FormHelperText>
           </FormControl>
           {errors.role && (
-            <Typography sx={{ color: 'red', fontSize: '10px' }}>
-              {errors.role}
-            </Typography>
+            <Typography sx={{ color: 'red', fontSize: '10px' }}>{errors.role}</Typography>
           )}
         </Grid>
         <Grid item xs={12}>
@@ -214,23 +208,19 @@ const SignupForm = () => {
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton
+                    type="button"
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
                     onClick={() => setShowPassword(!showPassword)}
                     edge="end"
                   >
-                    <IconifyIcon
-                      icon={
-                        showPassword ? 'majesticons:eye' : 'majesticons:eye-off'
-                      }
-                    />
+                    <IconifyIcon icon={showPassword ? 'majesticons:eye' : 'majesticons:eye-off'} />
                   </IconButton>
                 </InputAdornment>
               ),
             }}
           />
           {errors.password && (
-            <Typography sx={{ color: 'red', fontSize: '10px' }}>
-              {errors.password}
-            </Typography>
+            <Typography sx={{ color: 'red', fontSize: '10px' }}>{errors.password}</Typography>
           )}
         </Grid>
         <Grid item xs={12}>
@@ -246,15 +236,15 @@ const SignupForm = () => {
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton
+                    type="button"
+                    aria-label={
+                      showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'
+                    }
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     edge="end"
                   >
                     <IconifyIcon
-                      icon={
-                        showConfirmPassword
-                          ? 'majesticons:eye'
-                          : 'majesticons:eye-off'
-                      }
+                      icon={showConfirmPassword ? 'majesticons:eye' : 'majesticons:eye-off'}
                     />
                   </IconButton>
                 </InputAdornment>
@@ -275,13 +265,13 @@ const SignupForm = () => {
           fontSize: 12,
         }}
         type="submit"
+        disabled={signupMutation.isPending}
         variant="contained"
         color="primary"
-        onClick={handleSubmit}
       >
-        {signupMutation.isPending ? 'Loading...' : 'Sign Up'}
+        {signupMutation.isPending ? 'Creating account...' : 'Sign Up'}
       </Button>
-    </>
+    </Box>
   );
 };
 

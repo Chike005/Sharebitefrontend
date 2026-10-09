@@ -9,14 +9,19 @@ interface NavbarProps {
 const MainNavbar = ({ onDrawerToggle }: NavbarProps) => {
   const location = useLocation();
 
-  const pathSegments = location.pathname
-    .split('/')
-    .filter((segment) => segment.trim() !== '');
+  const pathSegments = location.pathname.split('/').filter((segment) => segment.trim() !== '');
   const routeName = pathSegments.length > 0 ? pathSegments.pop() : 'Overview';
 
   return (
     <>
-      <AppBar position="sticky" sx={{ bgcolor: 'common.white' }}>
+      <AppBar
+        position="sticky"
+        sx={{
+          bgcolor: 'background.default',
+          borderBottom: '1px solid',
+          borderColor: 'divider',
+        }}
+      >
         <Toolbar
           sx={{
             justifyContent: 'space-between',
@@ -27,8 +32,8 @@ const MainNavbar = ({ onDrawerToggle }: NavbarProps) => {
           <Typography
             sx={{
               display: { xs: 'none', md: 'block' },
-              fontSize: { sm: 'h2.fontSize', xl: 'h1.fontSize' },
-              fontWeight: 600,
+              fontSize: { sm: 'h5.fontSize', xl: 'h4.fontSize' },
+              fontWeight: 800,
               color: 'primary.darker',
               flex: 1,
               textAlign: { xs: 'center', md: 'left' },
@@ -37,20 +42,9 @@ const MainNavbar = ({ onDrawerToggle }: NavbarProps) => {
           >
             {routeName}
           </Typography>
-          <Stack
-            direction="row"
-            gap={1}
-            sx={{ display: { xs: 'flex', md: 'none' } }}
-          >
-            <IconButton
-              onClick={onDrawerToggle}
-              sx={{ display: { md: 'none' } }}
-            >
-              <IconifyIcon
-                icon="mingcute:menu-line"
-                color="primary.darker"
-                width={25}
-              />
+          <Stack direction="row" gap={1} sx={{ display: { xs: 'flex', md: 'none' } }}>
+            <IconButton onClick={onDrawerToggle} sx={{ display: { md: 'none' } }}>
+              <IconifyIcon icon="mingcute:menu-line" color="primary.darker" width={25} />
             </IconButton>
           </Stack>
 

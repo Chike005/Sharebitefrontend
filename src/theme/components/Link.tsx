@@ -11,6 +11,8 @@ const LinkBehavior = forwardRef<
   any,
   Omit<RouterLinkProps, 'to'> & { href?: string }
 >((props, ref) => <RouterLink ref={ref} to={props.href || '/'} {...props} />);
+LinkBehavior.displayName = 'LinkBehavior';
+
 const LinkComponent: Components<Omit<Theme, 'components'>>['MuiLink'] = {
   defaultProps: {
     underline: 'none',

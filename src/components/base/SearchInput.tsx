@@ -9,13 +9,7 @@ interface SearchInputProps {
   onChange: (value: string) => void;
 }
 
-const SearchInput = ({
-  fullWidth,
-  size,
-  placeholder,
-  value,
-  onChange,
-}: SearchInputProps) => {
+const SearchInput = ({ fullWidth, size, placeholder, value, onChange }: SearchInputProps) => {
   // const [value, setValue] = useState('');
 
   return (
@@ -37,10 +31,7 @@ const SearchInput = ({
           startAdornment: (
             <InputAdornment position="start">
               <IconButton type="submit">
-                <IconifyIcon
-                  icon="mingcute:search-line"
-                  color="text.secondary"
-                />
+                <IconifyIcon icon="mingcute:search-line" color="text.secondary" />
               </IconButton>
             </InputAdornment>
           ),
@@ -54,7 +45,8 @@ const SearchInput = ({
           '&::placeholder': {
             color: 'text.secondary',
           },
-          border: '2px solid #0047CC',
+          border: '1px solid',
+          borderColor: 'primary.light',
           borderRadius: 2,
         }}
       />

@@ -1,18 +1,21 @@
-import React from 'react';
 import SignupForm from 'components/common/Signup';
 import { Card, Grid, Link, Typography } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
+import paths from 'router/path';
 
 const SignupPage = () => {
   return (
     <Grid
       container
       sx={{
-        minHeight: '100vh',
-        position: 'absolute',
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
+        width: '100%',
+        maxWidth: 1100,
+        minHeight: { md: 'calc(100vh - 150px)' },
+        overflow: 'hidden',
+        borderRadius: { xs: 4, md: 7 },
+        border: '1px solid',
+        borderColor: 'divider',
+        boxShadow: '0 24px 80px rgba(25, 53, 46, 0.08)',
       }}
     >
       <Grid
@@ -20,7 +23,7 @@ const SignupPage = () => {
         xs={12}
         md={6}
         sx={{
-          backgroundColor: '#fff',
+          backgroundColor: 'background.paper',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
@@ -29,7 +32,7 @@ const SignupPage = () => {
         <Card
           sx={{
             p: { xs: 3, sm: 5 },
-            width: { xs: '100%', sm: '100%', md: '80%' },
+            width: { xs: '100%', sm: '90%', md: '84%' },
           }}
         >
           <Typography variant="h4">Sign Up</Typography>
@@ -43,7 +46,8 @@ const SignupPage = () => {
           >
             Already have an account?
             <Link
-              href="/login"
+              component={RouterLink}
+              to={paths.login}
               variant="subtitle2"
               sx={{ ml: 0.75, '&:hover': { color: 'neutral.light' } }}
             >
@@ -84,7 +88,7 @@ const SignupPage = () => {
             overflowWrap: 'break-word', // Ensures long words are wrapped
             textAlign: 'center',
             paddingTop: 5,
-            color: '#000',
+            color: 'primary.dark',
           }}
         >
           Unlock the possibilities of a Decentralized World

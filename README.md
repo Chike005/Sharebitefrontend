@@ -30,10 +30,11 @@ This is the frontend for the Donation Management System, built using **React (Vi
    npm install
    ```
 3. **Set up environment variables:**
-   Create a `.env` file in the root directory with:
+   Create a `.env` file in the frontend directory with:
    ```env
    VITE_API_BASE_URL=http://localhost:8000/api
    ```
+   If unset, the frontend uses `http://localhost:8000/api` for local development.
 4. **Start the development server:**
    ```sh
    npm run dev
@@ -95,5 +96,4 @@ This project is licensed under the MIT License.
 
 ## 📞 Contact
 For support or contributions, contact [Your Name] at [opeyemi.ajegbomogun@yahoo.com].
-
 

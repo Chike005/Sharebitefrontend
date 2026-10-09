@@ -29,7 +29,7 @@ const DonationDetails = () => {
         >
           <DonationIcon
             iconName="carbon:credentials"
-            iconColor="#0047CC"
+            iconColor="#1e493c"
             iconTitle="Donations Made"
             IconNumber={currentUserDonations.length}
             iconBgColor="neutral.light"

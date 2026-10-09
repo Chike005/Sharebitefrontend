@@ -27,4 +27,6 @@ const ReactSwiper = forwardRef<SwiperRef, SwiperComponentProps>(
   },
 );
 
+ReactSwiper.displayName = 'ReactSwiper';
+
 export default ReactSwiper;

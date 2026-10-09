@@ -5,7 +5,7 @@ const DrawerComponent: Components<Omit<Theme, 'components'>>['MuiDrawer'] = {
   defaultProps: {},
   styleOverrides: {
     paper: ({ theme }) => ({
-      background: theme.palette.common.white,
+      background: theme.palette.background.default,
       borderRightWidth: 1,
       borderColor: theme.palette.action.focus,
     }),

@@ -1,12 +1,4 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  Divider,
-  Menu,
-  Stack,
-  Typography,
-} from '@mui/material';
+import { Avatar, Box, Button, Divider, Menu, Stack, Typography } from '@mui/material';
 // import ProfileImage from 'assets/avatar.jpg';
 import IconifyIcon from 'components/base/IconifyIcon';
 import ProfileInformation from 'components/profile/ProfileInfo';
@@ -50,8 +42,8 @@ const ProfileDropdown = () => {
           sx={{ p: 0, position: 'relative' }}
           onClick={(event) => handleOpen(event, 'popover1')}
         >
-          <Typography color="#0047CC" variant="h3" fontWeight="700">
-            Welcome, {user?.first_name.toUpperCase()}
+          <Typography color="primary.darker" variant="body1" fontWeight="700">
+            Welcome, {(user?.first_name || user?.username || '').toUpperCase()}
           </Typography>
           <div style={{ paddingLeft: 15 }}>
             <svg
@@ -62,10 +54,10 @@ const ProfileDropdown = () => {
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
+                fillRule="evenodd"
+                clipRule="evenodd"
                 d="M1.4 0.299988L6 4.89999L10.6 0.299988L12 1.69999L6 7.69999L0 1.69999L1.4 0.299988Z"
-                fill="#0047CC"
+                fill="#1e493c"
               />
             </svg>
           </div>
@@ -94,11 +86,7 @@ const ProfileDropdown = () => {
                 sx={{ py: 1.5, px: 0, cursor: 'pointer' }}
                 onClick={(event) => handleOpen(event, 'popover2')}
               >
-                <Stack
-                  direction="row"
-                  spacing={1.5}
-                  sx={{ alignItems: 'center' }}
-                >
+                <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}>
                   <Stack
                     direction="row"
                     sx={{
@@ -118,10 +106,7 @@ const ProfileDropdown = () => {
                         bgcolor: 'transparent',
                       }}
                     >
-                      <IconifyIcon
-                        icon={profileItem.icon}
-                        color={profileItem.color}
-                      />
+                      <IconifyIcon icon={profileItem.icon} color={profileItem.color} />
                     </Avatar>
                   </Stack>
                   <div>
@@ -144,11 +129,7 @@ const ProfileDropdown = () => {
               sx={{ py: 1.5, px: 0, cursor: 'pointer' }}
               onClick={(event) => handleOpen(event, 'popover3')}
             >
-              <Stack
-                direction="row"
-                spacing={1.5}
-                sx={{ alignItems: 'center' }}
-              >
+              <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}>
                 <Stack
                   direction="row"
                   sx={{
@@ -186,12 +167,7 @@ const ProfileDropdown = () => {
               </Stack>
             </Box>
             <Box mt={1.25}>
-              <Button
-                onClick={logout}
-                variant="outlined"
-                color="error"
-                fullWidth
-              >
+              <Button onClick={logout} variant="outlined" color="error" fullWidth>
                 Logout
               </Button>
             </Box>
@@ -199,16 +175,10 @@ const ProfileDropdown = () => {
         </Menu>
       </Fragment>
       {open.popover2 && (
-        <ProfileInformation
-          onClose={() => handleClose('popover2')}
-          profileInfo={user!}
-        />
+        <ProfileInformation onClose={() => handleClose('popover2')} profileInfo={user!} />
       )}
       {open.popover3 && (
-        <ResetPassword
-          onClose={() => handleClose('popover3')}
-          open={open.popover3}
-        />
+        <ResetPassword onClose={() => handleClose('popover3')} open={open.popover3} />
       )}
     </>
   );

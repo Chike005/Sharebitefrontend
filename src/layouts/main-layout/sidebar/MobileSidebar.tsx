@@ -1,5 +1,7 @@
-import { Drawer, List, Toolbar, Typography } from '@mui/material';
-// import Logo from 'components/common/Logo';
+import { Drawer, List, Toolbar, Typography, Link } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
+import { Utensils } from 'lucide-react';
+import paths from 'router/path';
 import { locationLinks } from 'layouts/main-layout/sidebar/MenuLinks';
 import MenuListItem from 'layouts/main-layout/sidebar/MenuListItem';
 import { donationsMenuLinks } from 'layouts/main-layout/sidebar/DonationMenuLinks';
@@ -55,9 +57,18 @@ const MobileSidebar = ({
       }}
     >
       <Toolbar sx={{ gap: 1, minHeight: 100 }}>
-        <Typography color="#0047CC" variant="h3" fontWeight="700">
-          SHAREBITE
-        </Typography>
+        <Link
+          component={RouterLink}
+          to={paths.home}
+          underline="none"
+          sx={{ display: 'flex', alignItems: 'center', gap: 1.25 }}
+          onClick={onDrawerClose}
+        >
+          <Utensils size={20} color="#1e493c" />
+          <Typography color="primary.darker" variant="h5" fontWeight="900">
+            ShareBite.
+          </Typography>
+        </Link>
       </Toolbar>
 
       <SimpleBar style={{ maxHeight: 'calc(100vh - 100px)' }}>
@@ -85,9 +96,7 @@ const MobileSidebar = ({
         )}
         {user?.is_donor && (
           <List sx={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-            <h3 style={{ paddingLeft: 14, fontSize: 16, fontWeight: 700 }}>
-              Donors
-            </h3>
+            <h3 style={{ paddingLeft: 14, fontSize: 16, fontWeight: 700 }}>Donors</h3>
             {donorLinks.map((menu) => (
               <DonorMenuItem key={menu.id} menuItem={menu} />
             ))}
@@ -95,9 +104,7 @@ const MobileSidebar = ({
         )}
         {user?.is_receiver && (
           <List sx={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-            <h3 style={{ paddingLeft: 14, fontSize: 16, fontWeight: 700 }}>
-              Recievers
-            </h3>
+            <h3 style={{ paddingLeft: 14, fontSize: 16, fontWeight: 700 }}>Recievers</h3>
             {recieverLinks.map((menu) => (
               <MenuListItem key={menu.id} menuItem={menu} />
             ))}

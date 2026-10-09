@@ -29,7 +29,7 @@ const DonationDetails = () => {
           sx={{
             fontSize: { xs: 'overline.fontSize', md: 'caption.fontSize' },
             fontWeight: 'bold',
-            color: '#0047CC',
+            color: 'primary.main',
             ml: 1,
             backgroundColor: 'neutral.light',
             padding: '7px',
@@ -57,7 +57,7 @@ const DonationDetails = () => {
         >
           <DonationIcon
             iconName="carbon:credentials"
-            iconColor="#0047CC"
+            iconColor="#1e493c"
             iconTitle="Donors"
             IconNumber={donors.length}
             iconBgColor="neutral.light"

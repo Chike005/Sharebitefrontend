@@ -6,12 +6,14 @@ const LoginPage = () => {
     <Grid
       container
       sx={{
-        minHeight: '100vh',
-        position: 'absolute',
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
+        width: '100%',
+        maxWidth: 1100,
+        minHeight: { md: 'calc(100vh - 150px)' },
+        overflow: 'hidden',
+        borderRadius: { xs: 4, md: 7 },
+        border: '1px solid',
+        borderColor: 'divider',
+        boxShadow: '0 24px 80px rgba(25, 53, 46, 0.08)',
       }}
     >
       <Grid
@@ -19,7 +21,7 @@ const LoginPage = () => {
         xs={12}
         md={6}
         sx={{
-          backgroundColor: '#fff',
+          backgroundColor: 'background.paper',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
@@ -28,7 +30,7 @@ const LoginPage = () => {
         <Card
           sx={{
             p: { xs: 3, sm: 5 },
-            width: { xs: '80%', sm: '60%', md: '80%' },
+            width: { xs: '100%', sm: '80%', md: '78%' },
             backgroundColor: 'transparent',
           }}
         >
@@ -76,7 +78,7 @@ const LoginPage = () => {
             overflowWrap: 'break-word', // Ensures long words are wrapped
             textAlign: 'center',
             paddingTop: 5,
-            color: '#000',
+            color: 'primary.dark',
           }}
         >
           Unlock the possibilities of a Decentralized World

@@ -20,16 +20,13 @@ const DonationChart = () => {
   const dataDonation: PieChartDataType[] = [
     {
       name: 'Successful',
-      value: calculatePercentage(
-        donations.length,
-        donations.length - pendingDonation.length,
-      ),
+      value: calculatePercentage(donations.length, donations.length - pendingDonation.length),
       color: '#06c9a9',
     },
     {
       name: 'Pending',
       value: calculatePercentage(donations.length, pendingDonation.length),
-      color: '#0047CC',
+      color: '#1e493c',
     },
   ];
 

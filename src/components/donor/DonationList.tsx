@@ -1,10 +1,5 @@
 import { Button, Card, Stack, Typography } from '@mui/material';
-import {
-  DataGrid,
-  GridColDef,
-  GridPaginationModel,
-  GridValidRowModel,
-} from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridPaginationModel, GridValidRowModel } from '@mui/x-data-grid';
 import { dateFormatFromUTC, toUpperCase, transformBool } from 'helpers/utils';
 import NoData from '../../components/base/NoData';
 import { useState, MouseEvent } from 'react';
@@ -34,12 +29,8 @@ const filter_data: FilterDataType[] = [
 let rowHeight = 60;
 
 const DonationListings = () => {
-  const {
-    currentUserDonations,
-    currentUserDonationLoading,
-    currentUserDonationError,
-    setCstatus,
-  } = useDonation();
+  const { currentUserDonations, currentUserDonationLoading, currentUserDonationError, setCstatus } =
+    useDonation();
 
   const { down } = useBreakpoints();
   const [open, setOpen] = useState<{ [key: string]: HTMLElement | null }>({
@@ -89,9 +80,7 @@ const DonationListings = () => {
       hideable: false,
       renderCell: (params) => {
         const color =
-          toUpperCase(params.row.status.toUpperCase()) === 'SUCCESSFUL'
-            ? '#06c9a9'
-            : '#e30707';
+          toUpperCase(params.row.status.toUpperCase()) === 'SUCCESSFUL' ? '#06c9a9' : '#e30707';
 
         return <Typography color={color}>{params.row.status}</Typography>;
       },
@@ -103,16 +92,9 @@ const DonationListings = () => {
       maxWidth: 100,
       hideable: false,
       renderCell: (params) => {
-        const color =
-          toUpperCase(params.row.is_reserved) === 'TRUE'
-            ? '#06c9a9'
-            : '#e30707';
+        const color = toUpperCase(params.row.is_reserved) === 'TRUE' ? '#06c9a9' : '#e30707';
 
-        return (
-          <Typography color={color}>
-            {transformBool(params.row.is_reserved)}
-          </Typography>
-        );
+        return <Typography color={color}>{transformBool(params.row.is_reserved)}</Typography>;
       },
     },
     {
@@ -209,7 +191,7 @@ const DonationListings = () => {
               sx={{
                 fontSize: { xs: 'overline.fontSize', md: 'caption.fontSize' },
                 fontWeight: 'bold',
-                color: '#0047CC',
+                color: '#1e493c',
                 ml: 1,
                 backgroundColor: 'neutral.light',
                 padding: '7px',
@@ -229,29 +211,24 @@ const DonationListings = () => {
               sx={{
                 px: 1,
                 position: 'relative',
-                border: '2px solid #0047CC',
+                border: '1px solid #1e493c',
                 borderRadius: 2,
                 alignItems: 'center',
               }}
               onClick={(event) => handleOpen(event, 'popover1')}
             >
               <div style={{ alignSelf: 'center' }}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="15"
-                  height="15"
-                  viewBox="0 0 20 20"
-                >
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 20 20">
                   <path
-                    fill="#0047CC"
+                    fill="#1e493c"
                     d="M7 11h10v2H7zM4 7h16v2H4zm6 8h4v2h-4z"
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
+                    fillRule="evenodd"
+                    clipRule="evenodd"
                   />
                 </svg>
               </div>
               <Typography
-                color="#0047CC"
+                color="#1e493c"
                 fontWeight="400"
                 textAlign="center"
                 alignSelf="center"
@@ -273,22 +250,17 @@ const DonationListings = () => {
                 px: 1,
                 borderRadius: 2,
                 alignItems: 'center',
-                bgcolor: '#0047CC',
+                bgcolor: '#1e493c',
               }}
               onClick={(event) => handleOpen(event, 'popover2')}
             >
               <div style={{ alignSelf: 'center' }}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="15"
-                  height="15"
-                  viewBox="0 0 20 20"
-                >
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 20 20">
                   <path
                     fill="#ffff"
                     d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
+                    fillRule="evenodd"
+                    clipRule="evenodd"
                   />
                 </svg>
               </div>
@@ -319,8 +291,7 @@ const DonationListings = () => {
             border: 1,
             borderColor: 'neutral.light',
             bgcolor: { xs: 'transparent', sm: 'white' },
-            boxShadow: (theme) =>
-              `inset 0px -1px ${theme.palette.neutral.light}`, // color for row border
+            boxShadow: (theme) => `inset 0px -1px ${theme.palette.neutral.light}`, // color for row border
           },
         }}
       >
@@ -344,9 +315,7 @@ const DonationListings = () => {
               paginationModel={paginationModel}
               onPaginationModelChange={handlePaginationModelChange}
               slots={{
-                noRowsOverlay: () => (
-                  <NoData title={title} description={description} />
-                ),
+                noRowsOverlay: () => <NoData title={title} description={description} />,
                 pagination: () => null, // Hide the default pagination component
               }}
               loading={currentUserDonationLoading}
@@ -375,9 +344,7 @@ const DonationListings = () => {
           )}
         </>
       </Card>
-      {open.popover2 && (
-        <MakeDonation onClose={() => handleClose('popover2')} />
-      )}
+      {open.popover2 && <MakeDonation onClose={() => handleClose('popover2')} />}
       {open.popover3 && (
         <DonationView
           onClose={() => handleClose('popover3')}

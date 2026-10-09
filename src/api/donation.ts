@@ -51,9 +51,9 @@ class DonationApiRequest {
 
   static makeDonation = async (
     credentials: MakeDonation
-  ): Promise<any> => {
+  ): Promise<unknown> => {
     try {
-      const response = await axiosInstance.post(
+      const response = await axiosInstance.post<unknown>(
         `/${API_ENDPOINTS.donation.donations()}`,
         credentials
       );

@@ -1,11 +1,6 @@
 import { Stack, Typography } from '@mui/material';
 
-const Details = ({
-  titleLeft,
-  titleRight,
-  labelLeft,
-  labelRight,
-}: DetailsProps) => {
+const Details = ({ titleLeft, titleRight, labelLeft, labelRight }: DetailsProps) => {
   return (
     <Stack
       direction="row"
@@ -21,7 +16,8 @@ const Details = ({
           justifyContent: 'space-between',
           alignItems: 'start',
           width: '45%',
-          borderBottom: '1px solid #0047CC',
+          borderBottom: '1px solid',
+          borderColor: 'primary.light',
         }}
       >
         <Typography
@@ -38,7 +34,7 @@ const Details = ({
           sx={{
             fontSize: 13,
             fontWeight: 500,
-            color: '#0047CC',
+            color: 'primary.main',
           }}
         >
           {labelLeft}
@@ -50,7 +46,8 @@ const Details = ({
           justifyContent: 'space-between',
           alignItems: 'start',
           width: '50%',
-          borderBottom: '1px solid #0047CC',
+          borderBottom: '1px solid',
+          borderColor: 'primary.light',
         }}
       >
         <Typography
@@ -68,7 +65,7 @@ const Details = ({
           sx={{
             fontSize: 13,
             fontWeight: 500,
-            color: '#0047CC',
+            color: 'primary.main',
             textAlign: 'left',
           }}
         >
