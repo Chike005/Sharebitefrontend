@@ -68,6 +68,7 @@ declare global {
     email: string;
     is_donor: boolean;
     is_receiver: boolean;
+    is_staff: boolean;
   }
 
   interface Donation {
@@ -214,6 +215,7 @@ declare global {
 
   interface ProtectedRouteProps {
     children: React.ReactNode;
+    staffOnly?: boolean;
     // path: string;
     // exact?: boolean;
   }

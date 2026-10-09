@@ -5,7 +5,9 @@ import { axiosInstance, handleAxiosError } from './config';
 type MakeDonation = globalThis.MakeDonation;
 
 class DonationApiRequest {
-  static getAllDonations = async (status?: string) => {
+  static getAllDonations = async (
+    status?: string,
+  ): Promise<{ donations: Donation[] }> => {
     try {
       const response = await axiosInstance.get(
         `/${API_ENDPOINTS.donation.donations()}`
@@ -23,7 +25,7 @@ class DonationApiRequest {
 
       return { donations };
     } catch (error) {
-      handleAxiosError(error);
+      return handleAxiosError(error);
     }
   };
 

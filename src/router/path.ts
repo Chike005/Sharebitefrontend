@@ -14,6 +14,7 @@ const paths = {
   home: `${rootPaths.pageRoots}home`,
 
   dashboard: `${rootPaths.pageRoots}dashboard`,
+  widget: `${rootPaths.pageRoots}widget`,
   donations: `${rootPaths.pageRoots}donations`,
   donors: `${rootPaths.pageRoots}donors`,
   receivers: `${rootPaths.pageRoots}receivers`,

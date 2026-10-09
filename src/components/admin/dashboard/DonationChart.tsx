@@ -44,7 +44,11 @@ const DonationChart = () => {
   ];
 
   return (
-    <Stack spacing={1.5} direction="row">
+    <Stack
+      spacing={1.5}
+      direction={{ xs: 'column', md: 'row' }}
+      sx={{ width: '100%' }}
+    >
       <DonationPieChart
         data={dataDonation}
         titleheader="Donation Distribution"
@@ -63,7 +67,7 @@ const DonationChart = () => {
         sx={{
           justifyContent: 'space-between',
           alignItems: 'center',
-          width: '25.3%',
+          width: { xs: '100%', md: '25.3%' },
         }}
       >
         <Card

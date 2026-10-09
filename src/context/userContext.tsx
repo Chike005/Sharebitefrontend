@@ -19,7 +19,7 @@ export const useUser = () => {
 export const UserProvider = ({ children }: ContextProps) => {
   const [user, setUser] = useState<User | null>(() => {
     const savedUser = localStorage.getItem('user');
-    return savedUser ? JSON.parse(savedUser) : null;
+    return savedUser ? (JSON.parse(savedUser) as User) : null;
   });
 
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {

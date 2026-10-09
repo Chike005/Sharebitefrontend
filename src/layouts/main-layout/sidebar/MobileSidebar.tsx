@@ -72,7 +72,7 @@ const MobileSidebar = ({
       </Toolbar>
 
       <SimpleBar style={{ maxHeight: 'calc(100vh - 100px)' }}>
-        {!user?.is_donor && !user?.is_receiver && (
+        {user?.is_staff && (
           <>
             <List sx={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
               <h3 style={{ paddingLeft: 14, fontSize: 16 }}>Overview</h3>
