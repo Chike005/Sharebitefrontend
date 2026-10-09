@@ -41,9 +41,22 @@ declare global {
     donor?: number;
     quantity: string;
     expiry_date: string;
+    food_image?: File;
     latitude?: number;
     longitude?: number;
     donor_id?: number;
+    collection_point: number;
+  }
+
+  interface CollectionPoint {
+    id: number;
+    name: string;
+    address: string;
+    latitude: number;
+    longitude: number;
+    opening_hours: string;
+    accepted_food_types: string[];
+    instructions: string;
   }
 
   interface User {
@@ -73,6 +86,12 @@ declare global {
     latitude?: number;
     longitude?: number;
     quantity: string;
+    collection_point: number;
+    collection_point_details: CollectionPoint;
+    collection_status: 'awaiting_dropoff' | 'received_at_collection_point';
+    food_image?: string | null;
+    quantity?: number | null;
+    expiry_date?: string | null;
   }
 
   interface ReDonation {

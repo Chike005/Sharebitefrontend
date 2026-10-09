@@ -8,6 +8,7 @@ export const API_ENDPOINTS = {
   donation: {
     donations: () => 'donations/',
     updatestatus: (pk: number) => `donations/${pk}/status/`,
+    confirmReceipt: (pk: number) => `donations/${pk}/confirm-receipt/`,
     userdonations: () => 'donations/mine/',
     getDonationDetails: (donation_id: number) => `donations/${donation_id}/`,
     uploadProofs: (donation_id: number) => `donations/${donation_id}/proof/`,
@@ -20,6 +21,9 @@ export const API_ENDPOINTS = {
   droffsites: {
     getAllSites: () => 'dropoff-sites/',
     addSite: () => 'dropoff-sites/',
+  },
+  collectionPoints: {
+    list: () => 'collection-points/',
   },
   users: {
     members: () => 'members/',

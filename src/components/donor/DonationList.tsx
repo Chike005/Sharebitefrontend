@@ -86,6 +86,24 @@ const DonationListings = () => {
       },
     },
     {
+      field: 'collection_status',
+      headerName: 'Drop-off status',
+      flex: 1,
+      minWidth: 180,
+      hideable: false,
+      valueGetter: (_value, row) =>
+        row.collection_status === 'received_at_collection_point'
+          ? 'Received at collection point'
+          : 'Awaiting drop-off',
+    },
+    {
+      field: 'collection_point_details',
+      headerName: 'Collection point',
+      flex: 1,
+      minWidth: 180,
+      valueGetter: (_value, row) => row.collection_point_details?.name ?? '',
+    },
+    {
       field: 'is_reserved',
       headerName: 'Reserved',
       flex: 1,

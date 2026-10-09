@@ -40,6 +40,35 @@ This is the frontend for the Donation Management System, built using **React (Vi
    npm run dev
    ```
 
+### Collection-point demo
+
+Run the Django API and apply its migrations first; migration `0007` seeds three
+illustrative, staffed collection points around Manchester. The donation form
+requires selecting one of these points by card, without requesting location
+permission. The optional map is shown only when `VITE_GOOGLE_MAPS_API_KEY` is
+configured; cards remain fully usable without it.
+
+Optional `.env` setting:
+
+```env
+VITE_GOOGLE_MAPS_API_KEY=your-restricted-browser-key
+```
+
+Restrict any Google Maps browser key by allowed referrers and the required Maps
+JavaScript API in Google Cloud. Never commit a real key. New donations begin as
+**Awaiting drop-off**. An administrator confirms they have arrived at the chosen
+point, changing the workflow to **Received at collection point**; receivers can
+reserve only after that confirmation. The point and its address appear in the
+donation summary and are saved with the donation.
+
+**Portfolio demo — collection points are illustrative; no real donations are
+accepted.** The seeded location names, addresses, opening hours and coordinates
+are fictional demo information.
+
+Donors can optionally attach a JPG, PNG or WebP photo (up to 5 MB) while
+creating a donation. The image is previewed before submission and appears in
+the donation details; it is distinct from the later proof-of-donation upload.
+
 ## 🔧 Project Structure
 ```
 frontend/
@@ -96,4 +125,3 @@ This project is licensed under the MIT License.
 
 ## 📞 Contact
 For support or contributions, contact [Your Name] at [emmanuelifedi0@gmail.com].
-

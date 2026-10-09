@@ -11,6 +11,7 @@ import DropOffMap from 'components/base/DropOffMap';
 
 const DonationView = ({ onClose, donation, mode }: DonationViewProps) => {
   const { user } = useUser();
+  const mapsEnabled = Boolean(import.meta.env.VITE_GOOGLE_MAPS_API_KEY?.trim());
 
   const reservedonationMutation = useMutation({
     mutationFn: DonationApiRequest.reserveDonation,
@@ -106,20 +107,66 @@ const DonationView = ({ onClose, donation, mode }: DonationViewProps) => {
                   labelRight={transformBool(donation.is_delivered)}
                 />
                 <Details
+                  titleLeft="Quantity"
+                  titleRight="Best before"
+                  labelLeft={donation.quantity ? String(donation.quantity) : 'Not specified'}
+                  labelRight={donation.expiry_date || 'Not specified'}
+                />
+                <Details
                   titleLeft="Dropoff location"
                   titleRight="Donated at"
-                  labelLeft={donation.location}
+                  labelLeft={donation.collection_point_details.name}
                   labelRight={dateFormatFromUTC(donation.created_at)}
                 />
+                <Details
+                  titleLeft="Collection point address"
+                  titleRight="Drop-off status"
+                  labelLeft={donation.collection_point_details.address}
+                  labelRight={
+                    donation.collection_status === 'received_at_collection_point'
+                      ? 'Received at collection point'
+                      : 'Awaiting drop-off'
+                  }
+                />
 
-                {/* ✅ DropOffMap placement here */}
-                {donation.latitude && donation.longitude && (
-                  <Box mt={2}>
-                    <Typography variant="body2" fontWeight="500" mb={1}>
-                      Drop-off Location on Map
+                {donation.food_image && (
+                  <Box>
+                    <Typography variant="body2" fontWeight={700} mb={1}>
+                      Food photo
                     </Typography>
-                    <DropOffMap lat={donation.latitude} lng={donation.longitude} />
+                    <Box
+                      component="img"
+                      src={donation.food_image}
+                      alt={`Photo of ${donation.title}`}
+                      sx={{
+                        display: 'block',
+                        width: '100%',
+                        maxWidth: 480,
+                        maxHeight: 320,
+                        objectFit: 'cover',
+                        borderRadius: 3,
+                      }}
+                    />
                   </Box>
+                )}
+
+                {mapsEnabled &&
+                  donation.collection_point_details.latitude &&
+                  donation.collection_point_details.longitude && (
+                    <Box mt={2}>
+                      <Typography variant="body2" fontWeight="500" mb={1}>
+                        Collection point on map
+                      </Typography>
+                      <DropOffMap
+                        lat={donation.collection_point_details.latitude}
+                        lng={donation.collection_point_details.longitude}
+                      />
+                    </Box>
+                  )}
+                {!mapsEnabled && (
+                  <Typography variant="caption" color="text.secondary">
+                    Map view is optional and has not been configured.
+                  </Typography>
                 )}
 
                 <Details
@@ -180,8 +227,8 @@ const DonationView = ({ onClose, donation, mode }: DonationViewProps) => {
                 textTransform: 'uppercase',
               }}
             >
-              {donation.status.toUpperCase() === 'PENDING'
-                ? 'This Donation cannot be reserved yet! until it is confirmed by the administrator'
+              {donation.collection_status !== 'received_at_collection_point'
+                ? 'This donation can be reserved once an administrator confirms it has reached the collection point.'
                 : ''}
             </Typography>
             <Stack direction="row" spacing={2} justifyContent="flex-end">
@@ -190,7 +237,10 @@ const DonationView = ({ onClose, donation, mode }: DonationViewProps) => {
                 color="primary"
                 sx={{ fontSize: 12, width: 150 }}
                 onClick={handleReservation}
-                disabled={donation.status.toUpperCase() === 'PENDING'}
+                disabled={
+                  donation.collection_status !== 'received_at_collection_point' ||
+                  reservedonationMutation.isPending
+                }
               >
                 Reserve
               </Button>
