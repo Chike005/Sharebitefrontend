@@ -95,5 +95,5 @@ For deployment, upload the `dist/` folder to your hosting service.
 This project is licensed under the MIT License.
 
 ## 📞 Contact
-For support or contributions, contact [Your Name] at [opeyemi.ajegbomogun@yahoo.com].
+For support or contributions, contact [Your Name] at [emmanuelifedi0@gmail.com].
 
