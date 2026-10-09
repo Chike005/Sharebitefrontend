@@ -397,6 +397,10 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      <p className="mx-auto max-w-7xl px-5 pb-8 text-center text-sm text-slate-500 sm:px-8">
+        Portfolio demo — collection points are illustrative; no real donations are accepted.
+      </p>
     </main>
   );
 };

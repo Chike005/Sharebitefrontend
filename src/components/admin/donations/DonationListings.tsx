@@ -102,6 +102,17 @@ const RecentListings = () => {
       },
     },
     {
+      field: 'collection_status',
+      headerName: 'Drop-off status',
+      flex: 1,
+      minWidth: 180,
+      hideable: false,
+      valueGetter: (_value, row) =>
+        row.collection_status === 'received_at_collection_point'
+          ? 'Received at collection point'
+          : 'Awaiting drop-off',
+    },
+    {
       field: 'is_reserved',
       headerName: 'Reserved',
       flex: 1,

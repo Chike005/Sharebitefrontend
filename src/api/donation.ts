@@ -50,12 +50,18 @@ class DonationApiRequest {
   };
 
   static makeDonation = async (
-    credentials: MakeDonation
+    credentials: MakeDonation & { food_image?: File }
   ): Promise<unknown> => {
     try {
+      const formData = new FormData();
+      Object.entries(credentials).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== '') {
+          formData.append(key, value);
+        }
+      });
       const response = await axiosInstance.post<unknown>(
         `/${API_ENDPOINTS.donation.donations()}`,
-        credentials
+        formData
       );
       return response.data;
     } catch (error) {
@@ -74,6 +80,17 @@ class DonationApiRequest {
       const response = await axiosInstance.put(
         `/${API_ENDPOINTS.donation.updatestatus(donation_id)}`,
         { status }
+      );
+      return response.data;
+    } catch (error) {
+      handleAxiosError(error);
+    }
+  };
+
+  static confirmCollectionPointReceipt = async (donation_id: number) => {
+    try {
+      const response = await axiosInstance.post(
+        `/${API_ENDPOINTS.donation.confirmReceipt(donation_id)}`,
       );
       return response.data;
     } catch (error) {

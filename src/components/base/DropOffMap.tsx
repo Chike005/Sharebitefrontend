@@ -15,7 +15,8 @@ const containerStyle = {
 
 const DropOffMap: React.FC<DropOffMapProps> = ({ lat, lng }) => {
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: 'AIzaSyDAEVtSkMAzJ27Y6ea2rvJQVXTobTNsLik', // Replace this
+    id: 'sharebite-collection-points-map',
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY ?? '',
   });
 
   if (!isLoaded) return <p>Loading map...</p>;

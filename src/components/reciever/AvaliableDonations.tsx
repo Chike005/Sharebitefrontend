@@ -40,8 +40,11 @@ const AvailableDonations = () => {
   const description = 'No Donations is avaliable.';
 
   const filteredDonations = donations.filter((donation) => {
-    const matchDonations = toUpperCase(donation.is_reserved) === 'FALSE';
-    return matchDonations;
+    return (
+      toUpperCase(donation.is_reserved) === 'FALSE' &&
+      !donation.is_delivered &&
+      donation.collection_status === 'received_at_collection_point'
+    );
   });
 
   const handleOpen = (
@@ -85,6 +88,17 @@ const AvailableDonations = () => {
 
         return <Typography color={color}>{params.row.status}</Typography>;
       },
+    },
+    {
+      field: 'collection_status',
+      headerName: 'Drop-off status',
+      flex: 1,
+      minWidth: 180,
+      hideable: false,
+      valueGetter: (_value, row) =>
+        row.collection_status === 'received_at_collection_point'
+          ? 'Received at collection point'
+          : 'Awaiting drop-off',
     },
     {
       field: 'is_reserved',

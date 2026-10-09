@@ -1,12 +1,24 @@
 import { Box, Button, Grid, Stack, Typography } from '@mui/material';
-import { useMutation } from '@tanstack/react-query';
 import DonationApiRequest from 'api/donation';
 import ImagePreview from 'components/base/ImagePreview';
 import Details from 'components/donor/DetailsComponents';
 import { dateFormatFromUTC, transformBool } from 'helpers/utils';
 import toast from 'react-hot-toast';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const AdminDonationDetails = ({ onClose, donation }: ReceiptProps) => {
+  const queryClient = useQueryClient();
+  const confirmReceiptMutation = useMutation({
+    mutationFn: DonationApiRequest.confirmCollectionPointReceipt,
+    async onSuccess() {
+      await queryClient.invalidateQueries({ queryKey: ['donations'] });
+      toast.success('Collection point receipt confirmed.', { id: 'async' });
+      onClose();
+    },
+    onError(error) {
+      toast.error(error.message, { id: 'async' });
+    },
+  });
   const updateStatusMutation = useMutation({
     mutationFn: DonationApiRequest.updateDonationStatus,
     onSuccess() {
@@ -121,6 +133,12 @@ const AdminDonationDetails = ({ onClose, donation }: ReceiptProps) => {
                   labelRight={transformBool(donation.is_delivered)}
                 />
                 <Details
+                  titleLeft="Quantity"
+                  titleRight="Best before"
+                  labelLeft={donation.quantity ? String(donation.quantity) : 'Not specified'}
+                  labelRight={donation.expiry_date || 'Not specified'}
+                />
+                <Details
                   titleLeft="Dropoff location"
                   titleRight="Donated at"
                   labelLeft={donation.location}
@@ -142,6 +160,36 @@ const AdminDonationDetails = ({ onClose, donation }: ReceiptProps) => {
                       : 'Not picked up yet'
                   }
                 />
+                <Details
+                  titleLeft="Collection point"
+                  titleRight="Drop-off workflow"
+                  labelLeft={donation.collection_point_details.name}
+                  labelRight={
+                    donation.collection_status === 'received_at_collection_point'
+                      ? 'Received at collection point'
+                      : 'Awaiting drop-off'
+                  }
+                />
+                {donation.food_image && (
+                  <Box>
+                    <Typography variant="body2" fontWeight={700} mb={1}>
+                      Food photo
+                    </Typography>
+                    <Box
+                      component="img"
+                      src={donation.food_image}
+                      alt={`Photo of ${donation.title}`}
+                      sx={{
+                        display: 'block',
+                        width: '100%',
+                        maxWidth: 480,
+                        maxHeight: 320,
+                        objectFit: 'cover',
+                        borderRadius: 3,
+                      }}
+                    />
+                  </Box>
+                )}
                 <Details
                   titleLeft="Reciver Name"
                   titleRight="Reciever Email"
@@ -242,6 +290,20 @@ const AdminDonationDetails = ({ onClose, donation }: ReceiptProps) => {
               : ''}
           </Typography>
           <Stack direction="row" spacing={2} justifyContent="flex-end">
+            {donation.collection_status === 'awaiting_dropoff' && (
+              <Button
+                onClick={() =>
+                  confirmReceiptMutation.mutate(donation.id)
+                }
+                variant="contained"
+                color="success"
+                disabled={confirmReceiptMutation.isPending}
+              >
+                {confirmReceiptMutation.isPending
+                  ? 'Confirming receipt…'
+                  : 'Confirm received at collection point'}
+              </Button>
+            )}
             {donation.status.toUpperCase() === 'PENDING' ? (
               <Button
                 onClick={handleConfirm}

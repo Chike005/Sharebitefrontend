@@ -1,49 +1,69 @@
-import React, { useCallback, useState } from 'react';
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 
 type Props = {
-  onLocationSelect: (lat: number, lng: number) => void;
+  points: CollectionPoint[];
+  selectedPointId: number | null;
+  onPointSelect: (pointId: number) => void;
 };
 
 const containerStyle = {
   width: '100%',
   height: '300px',
+  borderRadius: '16px',
 };
 
-const center = {
-  lat: 6.5244, // Default center (Lagos, for example)
-  lng: 3.3792,
+const manchester = {
+  lat: 53.4808,
+  lng: -2.2426,
 };
 
-const DropOffMapSelector: React.FC<Props> = ({ onLocationSelect }) => {
-  const [marker, setMarker] = useState<{ lat: number; lng: number } | null>(null);
-
-  const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: 'AIzaSyDAEVtSkMAzJ27Y6ea2rvJQVXTobTNsLik  ', // Replace this
+const DropOffMapSelector = ({
+  points,
+  selectedPointId,
+  onPointSelect,
+}: Props) => {
+  const { isLoaded, loadError } = useJsApiLoader({
+    id: 'sharebite-collection-points-map',
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY ?? '',
   });
+  const selectedPoint = points.find((point) => point.id === selectedPointId);
 
-  const onMapClick = useCallback(
-    (e: google.maps.MapMouseEvent) => {
-      if (e.latLng) {
-        const lat = e.latLng.lat();
-        const lng = e.latLng.lng();
-        setMarker({ lat, lng });
-        onLocationSelect(lat, lng);
-      }
-    },
-    [onLocationSelect],
-  );
+  if (loadError) {
+    return (
+      <p role="alert">
+        The map could not be loaded. You can still choose a collection point
+        from the cards.
+      </p>
+    );
+  }
 
-  if (!isLoaded) return <p>Loading map...</p>;
+  if (!isLoaded) return <p>Loading collection point map…</p>;
 
   return (
     <GoogleMap
       mapContainerStyle={containerStyle}
-      center={marker || center}
-      zoom={13}
-      onClick={onMapClick}
+      center={
+        selectedPoint
+          ? { lat: selectedPoint.latitude, lng: selectedPoint.longitude }
+          : manchester
+      }
+      zoom={11}
+      options={{
+        clickableIcons: false,
+        mapTypeControl: false,
+        streetViewControl: false,
+        fullscreenControl: false,
+      }}
     >
-      {marker && <Marker position={marker} />}
+      {points.map((point) => (
+        <Marker
+          key={point.id}
+          position={{ lat: point.latitude, lng: point.longitude }}
+          title={point.name}
+          label={point.id === selectedPointId ? '✓' : undefined}
+          onClick={() => onPointSelect(point.id)}
+        />
+      ))}
     </GoogleMap>
   );
 };

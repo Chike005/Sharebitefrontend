@@ -27,6 +27,17 @@ class DroffSiteApiRequest {
       handleAxiosError(error);
     }
   };
+
+  static getCollectionPoints = async () => {
+    try {
+      const response = await axiosInstance.get<CollectionPoint[]>(
+        `/${API_ENDPOINTS.collectionPoints.list()}`,
+      );
+      return { collectionPoints: response.data };
+    } catch (error) {
+      handleAxiosError(error);
+    };
+  };
 }
 
 export default DroffSiteApiRequest;
