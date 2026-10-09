@@ -10,6 +10,7 @@ const AuthLayout = lazy(() => import('layouts/auth-layout'));
 
 const Home = lazy(() => import('pages/Home'));
 const Dashboard = lazy(() => import('pages/admin/dashboard'));
+const Widget = lazy(() => import('pages/admin/widget'));
 const Donations = lazy(() => import('pages/admin/donations'));
 const Donors = lazy(() => import('pages/admin/donors'));
 const Recievers = lazy(() => import('pages/admin/recievers'));
@@ -79,7 +80,19 @@ export const routes = [
             path: paths.dashboard,
             element: (
               <Suspense fallback={<LoadingProgress />}>
-                <Dashboard />
+                <ProtectedRoute staffOnly>
+                  <Dashboard />
+                </ProtectedRoute>
+              </Suspense>
+            ),
+          },
+          {
+            path: paths.widget,
+            element: (
+              <Suspense fallback={<LoadingProgress />}>
+                <ProtectedRoute staffOnly>
+                  <Widget />
+                </ProtectedRoute>
               </Suspense>
             ),
           },

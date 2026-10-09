@@ -26,7 +26,7 @@ const DonationPieChart = ({
   return (
     <Card
       sx={{
-        width: '45%',
+        width: { xs: '100%', md: '45%' },
         borderRadius: '5px',
         display: 'flex',
         flexDirection: 'column',

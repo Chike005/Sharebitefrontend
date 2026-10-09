@@ -69,6 +69,42 @@ Donors can optionally attach a JPG, PNG or WebP photo (up to 5 MB) while
 creating a donation. The image is previewed before submission and appears in
 the donation details; it is distinct from the later proof-of-donation upload.
 
+### Staff admin dashboard
+
+The existing `/dashboard` route is restricted to authenticated staff accounts.
+The dashboard lists donations by their donation status (`Pending` or
+`Successful`) and collection-point status (`Awaiting drop-off` or
+`Received at collection point`). Staff can confirm receipt at the donation's
+selected collection point after confirming the action; receivers can reserve
+the donation only after it is marked received. Django Admin at `/admin/`
+continues to be available for backend administration.
+
+The admin sidebar's **Widget** page (`/widget`) provides configurable donation
+and collection-point statistics and charts. Choose which widgets to display;
+the selection is saved in the current browser.
+
+For a local full-stack demo, follow the Django setup in the backend README and
+run `python manage.py createsuperuser` to create a staff login. In the frontend,
+set `VITE_API_BASE_URL=http://localhost:8000/api`, then run:
+
+```sh
+npm install
+npm run dev
+```
+
+Check the frontend before presenting the demo with:
+
+```sh
+npm run lint
+npm run build
+```
+
+The backend workflow and permission tests can be run from its directory with:
+
+```sh
+DJANGO_DEBUG=true python manage.py test sharebite.tests
+```
+
 ## 🔧 Project Structure
 ```
 frontend/
