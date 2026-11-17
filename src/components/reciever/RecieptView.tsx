@@ -110,7 +110,7 @@ const RecieptView = ({ onClose, donation }: ReceiptProps) => {
                   titleLeft="Donor Name"
                   titleRight="Donor Email"
                   labelLeft={`${donation.donor.first_name} ${donation.donor.last_name}`}
-                  labelRight={donation.donor.email}
+                  labelRight={donation.donor.email || 'Unavailable'}
                 />
                 <Details
                   titleLeft="Pickup Location"
@@ -122,7 +122,7 @@ const RecieptView = ({ onClose, donation }: ReceiptProps) => {
                   titleLeft="Reciver Name"
                   titleRight="Reciever Email"
                   labelLeft={`${donation.reserved_by!.first_name} ${donation.reserved_by!.last_name}`}
-                  labelRight={donation.reserved_by!.email}
+                  labelRight={donation.reserved_by!.email || 'Unavailable'}
                 />
                 <Typography
                   color="textSecondary"

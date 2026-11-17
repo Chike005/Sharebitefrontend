@@ -7,6 +7,7 @@ export const API_ENDPOINTS = {
   },
   donation: {
     donations: () => 'donations/',
+    available: () => 'donations/available/',
     updatestatus: (pk: number) => `donations/${pk}/status/`,
     confirmReceipt: (pk: number) => `donations/${pk}/confirm-receipt/`,
     userdonations: () => 'donations/mine/',

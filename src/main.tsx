@@ -20,7 +20,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <QueryClientProvider client={queryClient}>
           <Providers>
             <Toaster />
-            <RouterProvider router={router} />
+            <RouterProvider
+              router={router}
+              future={{ v7_startTransition: true }}
+            />
           </Providers>
         </QueryClientProvider>
       </BreakpointsProvider>

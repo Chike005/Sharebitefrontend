@@ -1,70 +1,50 @@
-import { Button, Card, Stack, Typography } from '@mui/material';
+import { Card, Stack, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridPaginationModel } from '@mui/x-data-grid';
-import { dateFormatFromUTC } from 'helpers/utils';
 import NoData from '../../base/NoData';
-// import IconifyIcon from 'components/base/IconifyIcon';
-import { useState, MouseEvent } from 'react';
+import { useState } from 'react';
 import { useBreakpoints } from 'providers/useBreakpoints';
-import AddLocation from './AddLocation';
 import { useDonation } from 'context/donationContext';
 import ErrorDisplay from 'components/base/ErrorDisplay';
-
-let rowHeight = 60;
 
 const SiteListings = () => {
   const { locations, locationError, locationLoading } = useDonation();
   const { down } = useBreakpoints();
-  const [open, setOpen] = useState<null | HTMLElement>(null);
-  const title = 'No Locations Available';
-  const description = 'There is no Location to display at the moment.';
-
-  const handleOpen = (event: MouseEvent<HTMLElement>) => {
-    setOpen(event.currentTarget);
-  };
+  const title = 'No Collection Points Configured';
+  const description = 'Add collection points in Django Admin to list them here.';
 
   const columns: GridColDef[] = [
     {
-      field: 'location',
-      headerName: 'Location',
+      field: 'name',
+      headerName: 'Collection Point',
       flex: 1,
-      width: 200,
+      minWidth: 170,
+      hideable: false,
+    },
+    {
+      field: 'address',
+      headerName: 'Address',
+      flex: 1,
+      minWidth: 220,
+      hideable: false,
+    },
+    {
+      field: 'opening_hours',
+      headerName: 'Opening Hours',
+      flex: 1.2,
+      minWidth: 220,
+      hideable: false,
+    },
+    {
+      field: 'accepted_food_types',
+      headerName: 'Accepted Food Types',
+      flex: 1.2,
+      minWidth: 240,
       hideable: false,
       renderCell: (params) => (
-        <Typography
-          sx={{
-            textTransform: 'capitalize',
-          }}
-        >
-          {params.value}
+        <Typography variant="body2" sx={{ whiteSpace: 'normal' }}>
+          {params.value.join(', ') || 'Not specified'}
         </Typography>
       ),
-    },
-    {
-      field: 'added_by',
-      headerName: 'Added By',
-      flex: 1,
-      minWidth: 300,
-      hideable: false,
-      renderCell: (params) => {
-        const fullname = params.row.added_by.first_name + ' ' + params.row.added_by.last_name;
-        return (
-          <Typography
-            sx={{
-              textTransform: 'capitalize',
-            }}
-          >
-            {fullname}
-          </Typography>
-        );
-      },
-    },
-    {
-      field: 'created_at',
-      headerName: 'Date Added',
-      flex: 1,
-      minWidth: 100,
-      hideable: false,
-      renderCell: (params) => <>{dateFormatFromUTC(params.value)}</>,
     },
   ];
 
@@ -74,12 +54,7 @@ const SiteListings = () => {
   });
 
   const isXs = down('sm');
-
-  if (isXs) {
-    rowHeight = 55;
-  } else {
-    rowHeight = 64;
-  }
+  const rowHeight = isXs ? 72 : 64;
 
   const handlePaginationModelChange = (model: GridPaginationModel) => {
     setPaginationModel(model);
@@ -94,7 +69,7 @@ const SiteListings = () => {
           justifyContent: 'space-between',
           alignContent: 'center',
         }}
-        direction="row"
+        direction={{ xs: 'column', sm: 'row' }}
       >
         <Typography
           sx={{
@@ -107,40 +82,11 @@ const SiteListings = () => {
             alignSelf: 'center',
           }}
         >
-          Locations
+          Collection Points
         </Typography>
-        <Button
-          variant="contained"
-          sx={{
-            px: 1,
-            py: 1,
-            borderRadius: 2,
-            alignItems: 'center',
-            bgcolor: '#1e493c',
-          }}
-          onClick={handleOpen}
-        >
-          <div style={{ alignSelf: 'center' }}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 20 20">
-              <path
-                fill="#ffff"
-                d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"
-                fillRule="evenodd"
-                clipRule="evenodd"
-              />
-            </svg>
-          </div>
-          <Typography
-            color="#ffff"
-            fontWeight="400"
-            textAlign="center"
-            alignSelf="center"
-            paddingLeft={0.5}
-          >
-            Add Location
-          </Typography>
-        </Button>
-        <AddLocation open={open} onClose={() => setOpen(null)} />
+        <Typography variant="body2" color="text.secondary">
+          Donation drop-off locations and their accepted food types.
+        </Typography>
       </Stack>
       <Card
         sx={{
@@ -199,9 +145,6 @@ const SiteListings = () => {
                   fontSize: { xs: 10, lg: 12 },
                   pl: 3,
                 },
-                // '& .MuiTypography-root': {
-                //   fontSize: { xs: 13, lg: 16 },
-                // },
               }}
             />
           )}
