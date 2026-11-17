@@ -9,6 +9,7 @@ import DonationView from 'components/donor/DonationDetails';
 import { useDonation } from 'context/donationContext';
 import ErrorDisplay from 'components/base/ErrorDisplay';
 import FilterDropdown from 'components/base/FilterDropDown';
+import CancelReservation from './CancelReservation';
 
 let rowHeight = 60;
 
@@ -28,7 +29,15 @@ const filter_data: FilterDataType[] = [
 ];
 
 const AvailableDonations = () => {
-  const { donations, donationLoading, donationError, setStatusFilter } = useDonation();
+  const {
+    donations,
+    reservations,
+    donationLoading,
+    donationError,
+    reservationLoading,
+    reservationError,
+    setStatusFilter,
+  } = useDonation();
   const { down } = useBreakpoints();
   const [open, setOpen] = useState<{ [key: string]: HTMLElement | null }>({
     popover1: null,
@@ -36,16 +45,24 @@ const AvailableDonations = () => {
   });
   const [rowDetails, setRowDetails] = useState<GridValidRowModel | null>(null);
   const [selectedItem, setSelectedItem] = useState<string>('All');
+  const reservedDonationIds = new Set(
+    reservations
+      .filter((reservation) => reservation.receipt == null)
+      .map((reservation) => reservation.id),
+  );
   const title = 'No Donation is Avaliable for pickup';
   const description = 'No Donations is avaliable.';
 
-  const filteredDonations = donations.filter((donation) => {
-    return (
+  const availableDonations = donations.filter(
+    (donation) =>
       toUpperCase(donation.is_reserved) === 'FALSE' &&
       !donation.is_delivered &&
-      donation.collection_status === 'received_at_collection_point'
-    );
-  });
+      donation.collection_status === 'received_at_collection_point',
+  );
+  const filteredDonations = [
+    ...availableDonations,
+    ...reservations.filter((reservation) => reservation.receipt == null),
+  ];
 
   const handleOpen = (
     event: MouseEvent<HTMLElement>,
@@ -145,18 +162,27 @@ const AvailableDonations = () => {
       minWidth: 150,
       hideable: false,
       renderCell: (params) => {
+        const isReservedByCurrentReceiver = reservedDonationIds.has(
+          params.row.id,
+        );
         return (
           <>
             <Button
-              onClick={(event) => handleOpen(event, 'popover2', params.row)}
+              onClick={(event) =>
+                handleOpen(
+                  event,
+                  isReservedByCurrentReceiver ? 'popover1' : 'popover2',
+                  params.row,
+                )
+              }
               variant="contained"
-              color="primary"
+              color={isReservedByCurrentReceiver ? 'warning' : 'primary'}
               sx={{
                 fontSize: 12,
                 width: 150,
               }}
             >
-              Full Details
+              {isReservedByCurrentReceiver ? 'Cancel Pickup' : 'Full Details'}
             </Button>
           </>
         );
@@ -269,10 +295,12 @@ const AvailableDonations = () => {
         }}
       >
         <>
-          {donationError ? (
+          {donationError || reservationError ? (
             <ErrorDisplay
               title={'Something went wrong, Please Try again'}
-              description={donationError.message}
+              description={
+                donationError?.message ?? reservationError?.message ?? ''
+              }
             />
           ) : (
             <DataGrid
@@ -291,7 +319,7 @@ const AvailableDonations = () => {
                 noRowsOverlay: () => <NoData title={title} description={description} />,
                 pagination: () => null, // Hide the default pagination component
               }}
-              loading={donationLoading}
+              loading={donationLoading || reservationLoading}
               sx={{
                 px: { xs: 0, md: 3 },
                 '& .MuiDataGrid-main': {
@@ -322,6 +350,13 @@ const AvailableDonations = () => {
           onClose={() => handleClose('popover2')}
           donation={rowDetails as Donation}
           mode="Reserved"
+        />
+      )}
+      {open.popover1 && (
+        <CancelReservation
+          open={open.popover1}
+          onClose={() => handleClose('popover1')}
+          donationData={rowDetails as Donation}
         />
       )}
     </Stack>
