@@ -197,6 +197,9 @@ export const routes = [
 
 const router = createBrowserRouter(routes, {
   basename: '/',
+  future: {
+    v7_relativeSplatPath: true,
+  },
 });
 
 export default router;
