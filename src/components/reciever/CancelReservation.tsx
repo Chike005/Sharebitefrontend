@@ -1,5 +1,5 @@
 import { Button, Popover, Stack, Typography } from '@mui/material';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import DonationApiRequest from 'api/donation';
 import IconifyIcon from 'components/base/IconifyIcon';
 import { useBreakpoints } from 'providers/useBreakpoints';
@@ -19,12 +19,17 @@ const CancelReservation = ({
 }: CancelReservationDropdownProps) => {
   const { up } = useBreakpoints();
   const upSM = up('sm');
+  const queryClient = useQueryClient();
 
   const canceldonationMutation = useMutation({
     mutationFn: DonationApiRequest.cancelDonation,
-    onSuccess() {
+    async onSuccess() {
       toast.success('Cancel Successfully!', { id: 'async' });
       onClose();
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['donations'] }),
+        queryClient.invalidateQueries({ queryKey: ['reservations'] }),
+      ]);
     },
     onError(error) {
       toast.error(error.message, { id: 'async' });
@@ -88,6 +93,7 @@ const CancelReservation = ({
             variant="contained"
             color="error"
             sx={{ fontSize: 13 }}
+            disabled={canceldonationMutation.isPending}
             onClick={handleSubmit}
           >
             Yes
@@ -98,6 +104,7 @@ const CancelReservation = ({
             variant="contained"
             color="primary"
             sx={{ fontSize: 13 }}
+            disabled={canceldonationMutation.isPending}
             onClick={onClose}
           >
             No

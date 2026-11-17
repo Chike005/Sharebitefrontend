@@ -3,7 +3,7 @@ import ImageUpload from 'components/base/ImageUpload';
 import Details from './DetailsComponents';
 import { dateFormatFromUTC, transformBool } from 'helpers/utils';
 import ImagePreview from 'components/base/ImagePreview';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import DonationApiRequest from 'api/donation';
 import toast from 'react-hot-toast';
 import { useUser } from 'context/userContext';
@@ -11,13 +11,18 @@ import DropOffMap from 'components/base/DropOffMap';
 
 const DonationView = ({ onClose, donation, mode }: DonationViewProps) => {
   const { user } = useUser();
+  const queryClient = useQueryClient();
   const mapsEnabled = Boolean(import.meta.env.VITE_GOOGLE_MAPS_API_KEY?.trim());
 
   const reservedonationMutation = useMutation({
     mutationFn: DonationApiRequest.reserveDonation,
-    onSuccess() {
+    async onSuccess() {
       toast.success('Reserved Successfully!', { id: 'async' });
       onClose();
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['donations'] }),
+        queryClient.invalidateQueries({ queryKey: ['reservations'] }),
+      ]);
     },
     onError(error) {
       toast.error(error.message, { id: 'async' });
@@ -232,6 +237,15 @@ const DonationView = ({ onClose, donation, mode }: DonationViewProps) => {
                 : ''}
             </Typography>
             <Stack direction="row" spacing={2} justifyContent="flex-end">
+              <Button
+                variant="outlined"
+                color="primary"
+                sx={{ fontSize: 12, width: 150 }}
+                onClick={onClose}
+                disabled={reservedonationMutation.isPending}
+              >
+                Cancel
+              </Button>
               <Button
                 variant="contained"
                 color="primary"
